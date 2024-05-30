@@ -4,14 +4,14 @@ BEGIN;
 
 CREATE table "center" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "name" VARCHAR(30) NOT NULL,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
 
 CREATE table "activity" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "name" VARCHAR(30) NOT NULL,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
@@ -24,10 +24,10 @@ CREATE table "center_has_activity" (
 );
 CREATE table "user" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "pseudo" VARCHAR(30) NOT NULL,
+     "pseudo" VARCHAR(30) NOT NULL UNIQUE,
      "firstname" VARCHAR(20) NOT NULL,
      "lastname" VARCHAR(20) NOT NULL,
-     "mail" VARCHAR(50) NOT NULL,
+     "mail" VARCHAR(50) NOT NULL UNIQUE,
      "password" VARCHAR(50) NOT NULL,
      "first_question" VARCHAR(60) NOT NULL,
      "first_answer" VARCHAR(50) NOT NULL,
@@ -40,7 +40,7 @@ CREATE table "user" (
 
 CREATE table "role" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "name" VARCHAR(30) NOT NULL,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
@@ -55,7 +55,7 @@ CREATE table "user_has_role" (
 
 CREATE table "section" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "name" VARCHAR(30) NOT NULL,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
