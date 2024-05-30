@@ -9,6 +9,24 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
+  export async function findUserById(id) {
+    const query = {
+      text: 'SELECT * FROM "users" WHERE id=$1',
+      values: [id],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
+  export async function checkUsersInformations(pseudo, mail, ) {
+    const query = {
+      text: 'SELECT "pseudo" FROM "user" WHERE pseudo=$1 OR mail=$2',
+      values: [pseudo, mail],
+    };
+    const result = await client.query(query);
+    return result.rows;
+  }
+
   export async function createUser ( 
     pseudo,
     firstname,
@@ -16,23 +34,22 @@ export async function findUserByEmail(mail) {
     mail,
     encryptedPassword,
     firstQuestion,
-    firstAnswer,
+    encryptedAnswer1,
     secondQuestion,
-    secondAnswer,
-
-  ) {
+    encryptedAnswer2,
+) {
     const query = {
         text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", second_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING (pseudo, mail, created_at)',
         values: [
-            pseudo,
-            firstname,
-            lastname,
-            mail,
-            encryptedPassword,
-            firstQuestion,
-            firstAnswer,
-            secondQuestion,
-            secondAnswer, 
+          pseudo,
+          firstname,
+          lastname,
+          mail,
+          encryptedPassword,
+          firstQuestion,
+          encryptedAnswer1,
+          secondQuestion,
+          encryptedAnswer2,
         ],
     };
     const result = await client.query(query);
