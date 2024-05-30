@@ -2,6 +2,6 @@
 
 BEGIN;
 
--- XXX Add DDLs here.
+DROP TABLE "center", "activity", "center_has_activity", "user", "role", "user_has_role", "section", "information", "leaflet_stored";
 
 COMMIT;
