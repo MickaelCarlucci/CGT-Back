@@ -1,4 +1,4 @@
-import client from "../helpers/pg.client";
+import client from "../helpers/pg.client.js";
 
 export async function findUserByEmail(mail) {
     const query = {

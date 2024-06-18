@@ -1,0 +1,20 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+POST {{ endpoint }}/api/users/signup
+content-type: application/json
+
+{
+    "pseudo": "Mike",
+    "firstname": "Mickael",
+    "lastname": "Carlucci",
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Statue59",
+    "firstQuestion": "Comment je m'appelle ?",
+    "firstAnswer": "Mike",
+    "secondQuestion": "J'habite dans quelle ville ?",
+    "secondAnswer": "Erre"
+}
+
+###
+GET {{ endpoint }}/api/users/test
