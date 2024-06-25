@@ -13,7 +13,8 @@ content-type: application/json
     "firstQuestion": "Comment je m'appelle ?",
     "firstAnswer": "Mike",
     "secondQuestion": "J'habite dans quelle ville ?",
-    "secondAnswer": "Erre"
+    "secondAnswer": "Erre",
+    "center_id": 1
 }
 
 ###

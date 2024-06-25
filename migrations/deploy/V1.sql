@@ -22,6 +22,7 @@ CREATE table "center_has_activity" (
      "activity_id" INT NOT NULL REFERENCES "activity"("id"),
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
 CREATE table "user" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      "pseudo" VARCHAR(30) NOT NULL UNIQUE,
@@ -37,7 +38,6 @@ CREATE table "user" (
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
-
 CREATE table "role" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      "name" VARCHAR(30) NOT NULL UNIQUE,
