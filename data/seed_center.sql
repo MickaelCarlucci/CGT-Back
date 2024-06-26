@@ -14,6 +14,7 @@ VALUES
 ("Stephenson"),
 ("Montigny"),
 ("Montpellier"),
-("Belfort");
+("Belfort"),
+('Pas de centre');
 
 COMMIT

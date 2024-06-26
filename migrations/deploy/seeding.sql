@@ -14,7 +14,8 @@ VALUES
 ('Stephenson'),
 ('Montigny'),
 ('Montpellier'),
-('Belfort');
+('Belfort'),
+('Pas de centre');
 
 INSERT INTO "activity" ("name")
 VALUES

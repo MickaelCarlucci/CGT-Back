@@ -11,7 +11,7 @@ export async function findUserByEmail(mail) {
 
   export async function findUserById(id) {
     const query = {
-      text: 'SELECT * FROM "users" WHERE id=$1',
+      text: 'SELECT * FROM "user" WHERE id=$1',
       values: [id],
     };
     const result = await client.query(query);
@@ -37,9 +37,10 @@ export async function findUserByEmail(mail) {
     encryptedAnswer1,
     secondQuestion,
     encryptedAnswer2,
+    centerId
 ) {
     const query = {
-        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", second_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING (pseudo, mail, created_at)',
+        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING (pseudo, mail, created_at)',
         values: [
           pseudo,
           firstname,
@@ -50,6 +51,7 @@ export async function findUserByEmail(mail) {
           encryptedAnswer1,
           secondQuestion,
           encryptedAnswer2,
+          centerId
         ],
     };
     const result = await client.query(query);
@@ -58,7 +60,7 @@ export async function findUserByEmail(mail) {
 
   export async function deleteUser(mail) {
     const query = {
-      text: `DELETE FROM "user" WHERE mail=$1 RETURNING (pseudo, mail)`,
+      text: `DELETE FROM "user" WHERE mail=$1 RETURNING mail`,
       values: [mail],
     };
     const result = await client.query(query);

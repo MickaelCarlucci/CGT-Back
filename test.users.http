@@ -14,8 +14,13 @@ content-type: application/json
     "firstAnswer": "Mike",
     "secondQuestion": "J'habite dans quelle ville ?",
     "secondAnswer": "Erre",
-    "center_id": 1
+    "centerId": 1
 }
 
 ###
-GET {{ endpoint }}/api/users/test
+DELETE {{ endpoint }}/api/users/4/delete
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr"
+}

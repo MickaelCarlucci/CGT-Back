@@ -22,6 +22,7 @@ signUp: async (request, response) => {
         firstAnswer,
         secondQuestion,
         secondAnswer,
+        centerId
     } = request.body;
 
 
@@ -53,6 +54,7 @@ signUp: async (request, response) => {
         encryptedAnswer1,
         secondQuestion,
         encryptedAnswer2,
+        centerId
     );
 
     if (!user) {
@@ -109,25 +111,29 @@ signUp: async (request, response) => {
   },
 
   deleteUserAccount: async (request, response) => {
-    const { userId } = request.params;
-    const { mail } = request.body;
+    try {
+      const { userId } = request.params;
+      const { mail } = request.body;
 
-    const user = await userDatamapper.findUserById(userId);
+      const user = await userDatamapper.findUserById(userId);
 
-    if (!user) {
-      return response.status(401).json({ error: "Le compte est introuvable" });
-    }
+      if (!user) {
+        return response.status(401).json({ error: "Le compte est introuvable" });
+      }
 
-    if (user.mail !== mail) {
-      return response
-        .status(401)
-        .json({
+      if (user.mail !== mail) {
+        return response.status(401).json({
           error: "Merci de saisir l'adresse mail correspondant à votre compte",
         });
-    }
-    const deletedUser = await userDatamapper.deleteUser(mail);
+      }
 
-    return response.status(200).send(deletedUser);
+      const deletedUser = await userDatamapper.deleteUser(mail);
+
+      return response.status(200).send(deletedUser);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      return response.status(500).json({ error: 'Internal Server Error' });
+    }
   },
 
   jwtExpirationVerification: async (request, response) => {
