@@ -43,9 +43,11 @@ VALUES
 ("OCP Répartition"),
 ("Vestel"),
 ("Karapace Courtage"),
-("Generali"),
+("Générali"),
 ("OWF"),
 ("Air Liquide"),
+("Iberdrola"),
+("France Billet"),
 ("Non présent dans la liste");
 
 COMMIT

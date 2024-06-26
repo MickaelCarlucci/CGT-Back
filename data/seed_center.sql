@@ -11,7 +11,7 @@ VALUES
 ("Laval"),
 ("Le Mans"),
 ("Orléans"),
-("Asnière sur Seine"),
+("Stephenson"),
 ("Montigny"),
 ("Montpellier"),
 ("Belfort");
