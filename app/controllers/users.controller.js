@@ -67,9 +67,9 @@ signUp: async (request, response) => {
   },
 
   signIn: async (request, response) => {
-    const { email, password } = request.body;
+    const { mail, password } = request.body;
 
-    const user = await userDatamapper.findUserByEmail(email);
+    const user = await userDatamapper.findUserByEmail(mail);
     //  vérifie que l'utilisateur existe
     if (!user) {
       return response
@@ -92,7 +92,7 @@ signUp: async (request, response) => {
     const accessToken = jwt.sign({
       id: user.id,
       pseudo: user.pseudo,
-      email: user.mail,
+      mail: user.mail,
     }, JWTSecret, {
       expiresIn: JWTRefreshExpiration,
     });

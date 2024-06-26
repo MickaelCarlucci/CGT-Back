@@ -18,9 +18,21 @@ content-type: application/json
 }
 
 ###
-DELETE {{ endpoint }}/api/users/4/delete
+DELETE {{ endpoint }}/api/users/1/delete
 content-type: application/json
 
 {
     "mail": "frewmike59@yahoo.fr"
 }
+
+###
+POST {{ endpoint }}/api/users/signin
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Statue59"
+}
+
+###
+POST {{ endpoint }}/api/users/1/mail
