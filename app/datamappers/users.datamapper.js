@@ -85,10 +85,10 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
-  export async function updateUserPassword(mail, newPassword) {
+  export async function updateUserPassword(mail, encryptedNewPassword) {
     const query = {
       text: 'UPDATE "user" SET password=$2 WHERE mail=$1 RETURNING (pseudo, mail)',
-      values: [mail, newPassword],
+      values: [mail, encryptedNewPassword],
     };
     const result = await client.query(query);
     return result.rows[0];

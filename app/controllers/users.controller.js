@@ -161,31 +161,33 @@ signUp: async (request, response) => {
   },
 
   passwordReset: async (request, response) => {
-    const { mail, answer1, answer2} = request.body;
-
+    const { mail, answer1, answer2 } = request.body;
+  
     const user = await userDatamapper.findUserByEmail(mail);
-
+  
     if (!user) {
       return response.status(401).json({ error: "Utilisateur introuvable" });
     }
-
+  
     const questions = {
       question1: user.first_question,
       question2: user.second_question,
     };
-
+  
     const validAnswer1 = await bcrypt.compare(answer1, user.first_answer);
-
+  
     if (!validAnswer1) {
       return response.status(401).json({ error: "Réponse incorrecte" });
     }
-
+  
     const validAnswer2 = await bcrypt.compare(answer2, user.second_answer);
-
+  
     if (!validAnswer2) {
       return response.status(401).json({ error: "Réponse incorrecte" });
     }
-    return response.status(200).send(questions, mail);
+  
+    // Utilisez .json() pour envoyer une réponse JSON valide
+    return response.status(200).json({ questions, mail });
   },
 
   resetingPassword: async (request, response) => {

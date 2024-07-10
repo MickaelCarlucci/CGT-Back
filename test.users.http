@@ -35,4 +35,21 @@ content-type: application/json
 }
 
 ###
-POST {{ endpoint }}/api/users/1/mail
+POST {{ endpoint }}/api/users/password/reset
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "answer1": "Mike",
+    "answer2": "Erre"
+}
+
+###
+PATCH  {{ endpoint }}/api/users/password/reseting
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Malice17" 
+}
+
