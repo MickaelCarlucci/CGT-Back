@@ -136,30 +136,6 @@ signUp: async (request, response) => {
     }
   },
 
-  jwtExpirationVerification: async (request, response) => {
-    // Récupérer le token depuis le header Authorization
-    const authHeader = request.headers['authorization'];
-  
-    if (!authHeader) {
-      return response.status(401).json({ error: "Autorisation manquante" });
-    }
-  
-    // Le token est généralement sous la forme "Bearer <token>"
-    const token = authHeader.split(' ')[1];
-  
-    if (!token) {
-      return response.status(401).json({ error: "Token missing" });
-    }
-  
-    // Vérifier le token JWT
-    jwt.verify(token, JWTSecret, (error, user) => {
-      if (error) {
-        return response.status(401).json({ error: "Token expiré" });
-      }
-      return response.status(200).send(user);
-    });
-  },
-
   passwordReset: async (request, response) => {
     const { mail, answer1, answer2 } = request.body;
   
