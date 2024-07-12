@@ -11,7 +11,7 @@ export default {
          if (!user) {
             return response.status(403).json({ error: "Utilisateur introuvable" });
         }
-        const databaseComparePseudo = await profileDatamapper.findByPseudo(newPseudo);
+        const databaseComparePseudo = await userDatamapper.findByPseudo(newPseudo);
         if (databaseComparePseudo) {
             return response.status(403).json({ error: "Ce pseudonyme existe déjà" });
         }

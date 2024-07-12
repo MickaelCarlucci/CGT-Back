@@ -18,7 +18,16 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
-  export async function checkUsersInformations(pseudo, mail, ) {
+  export async function findByPseudo(newpseudo) {
+    const query = {
+      text: 'SELECT * FROM "user" WHERE pseudo=$1',
+      values: [newpseudo],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
+  export async function checkUsersInformations(pseudo, mail) {
     const query = {
       text: 'SELECT "pseudo" FROM "user" WHERE pseudo=$1 OR mail=$2',
       values: [pseudo, mail],
@@ -69,7 +78,7 @@ export async function findUserByEmail(mail) {
 
   export async function updatePseudo(newPseudo, userId) {
     const query = {
-        text: 'UPDATE "user" SET mail=$1 WHERE id=$2 RETURNING (pseudo, mail) ',
+        text: 'UPDATE "user" SET pseudo=$1 WHERE id=$2 RETURNING (pseudo, mail) ',
         values: [newPseudo, userId],
     };
     const result = await client.query(query);
