@@ -17,17 +17,17 @@ export async function unlinkCenterFromActivity(centerId, activityId) {
     const result = await client.query(query);
     return result.rows[0];
 }
-//a revoir pour qu'elle donne toutes les activités par centre en l'état elle ne donne que le nombre de fois ou elle apparait
-/*export async function findActivitiesBycenterId(centerId) {
+
+export async function findActivitiesBycenterId(centerId) {
     const query = {
         text: `SELECT activity* FROM "activity" 
                JOIN "center_has_activity" ON activity.id = center_has_activity.activity_id
-               WHERE center_has_activity.activity_id = $1`,
+               WHERE center_has_activity.center_id = $1`,
         values: [centerId]
     };
-    const result = await this.client.query(query);
+    const result = await client.query(query);
     return result.rows;
-}*/
+}
 
 export async function findCentersByActivityId(activityId) {
     const query = {
@@ -36,7 +36,7 @@ export async function findCentersByActivityId(activityId) {
                WHERE center_has_activity.activity_id = $1`,
         values: [activityId]
     };
-    const result = await this.client.query(query);
+    const result = await client.query(query);
     return result.rows;
 }
 
