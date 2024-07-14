@@ -1,4 +1,3 @@
-
 export default class CoreAdminDataMapper {
 constructor(client, tablename) {
     this.client = client;
@@ -10,7 +9,7 @@ async findAll() {
         text: `SELECT * FROM "${this.tablename}"`
     };
     const result = await this.client.query(query);
-    return result.rows[0];
+    return result.rows;
 }
 
 async findById(id) {
@@ -28,7 +27,7 @@ async create(name) {
         values: [name]
     }
     const result = await this.client.query(query);
-    return result.rows;
+    return result.rows[0];
 }
 
 async delete(id) {
@@ -37,7 +36,7 @@ async delete(id) {
         values: [id]
     };
     const result = await this.client.query(query);
-    return result.rows;
+    return result.rows[0];
 }
 
 async update(name, id) {
@@ -46,7 +45,7 @@ async update(name, id) {
         values: [name, id],
     };
     const result = await this.client.query(query);
-    return result.rows;
+    return result.rows[0];
 }
 
 }

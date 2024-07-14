@@ -1,0 +1,6 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+GET {{ endpoint }}/api/admin/centers
+
+

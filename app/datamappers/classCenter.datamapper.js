@@ -1,7 +1,10 @@
-import CoreAdminDataMapper from "./coreAdmin.datamapper";
+import CoreAdminDataMapper from './coreAdmin.datamapper.js';
+import client from '../helpers/pg.client.js';
 
-export default class CenterDataMapper extends CoreAdminDataMapper {
-    constructor(client) {
+class CenterDataMapper extends CoreAdminDataMapper {
+    constructor() {
         super(client, 'center');
     }
 }
+
+export default new CenterDataMapper();
