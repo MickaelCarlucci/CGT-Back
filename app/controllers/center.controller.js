@@ -31,7 +31,7 @@ export default {
         if (checkCenter[0]) {
             return response
             .status(401)
-            .json({ error: "Le centre existe déjà"})
+            .json({ error: "Le centre a déjà été crée"})
         }
 
         const centeradded = await CenterDataMapper.create(nameCenter);
@@ -54,6 +54,21 @@ export default {
         }
         const deletedCenter = await CenterDataMapper.delete(centerId);
         return response.status(200).send(deletedCenter);
+    },
+
+    modificationCenter: async (request, response) => {
+        const {centerId} = request.params;
+        const nameCenter = request.body.name;
+
+        const center = await CenterDataMapper.findById(centerId);
+        if (!center) {
+            return response
+            .status(404)
+            .json({error: "Le centre n'a pas été trouvé"})
+        }
+
+        const updatedCenter = await CenterDataMapper.update(nameCenter, centerId)
+        return response.status(200).send(updatedCenter);
     }
 
 }
