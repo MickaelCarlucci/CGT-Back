@@ -13,3 +13,5 @@ Content-Type: application/json
 {
     "name": "Chicago"
 }
+###
+DELETE {{endpoint}}/api/admin/16/deleteCenter

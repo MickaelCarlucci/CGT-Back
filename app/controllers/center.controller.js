@@ -1,5 +1,4 @@
 import CenterDataMapper from "../datamappers/classCenter.datamapper.js";
-import * as centerHasActivityDataMapper from "../datamappers/centerHasActivity.datamapper.js";
 
 export default {
     findAllCenters: async (_, response) => {
@@ -42,6 +41,19 @@ export default {
             .json({error: "Une erreur est survenue"})
         }
         return response.status(200).send(centeradded)
+    },
+
+    deleteCenter: async (request, response) => {
+        const {centerId} = request.params;
+        const center = await CenterDataMapper.findById(centerId)
+
+        if (!center) {
+            return response
+            .status(404)
+            .json({error: "Le centre n'a pas été trouvé"})
+        }
+        const deletedCenter = await CenterDataMapper.delete(centerId);
+        return response.status(200).send(deletedCenter);
     }
 
 }

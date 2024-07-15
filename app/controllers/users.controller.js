@@ -111,7 +111,7 @@ signUp: async (request, response) => {
   },
 
   deleteUserAccount: async (request, response) => {
-    try {
+   
       const { userId } = request.params;
       const { mail } = request.body;
 
@@ -130,10 +130,6 @@ signUp: async (request, response) => {
       const deletedUser = await userDatamapper.deleteUser(mail);
 
       return response.status(200).send(deletedUser);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      return response.status(500).json({ error: 'Internal Server Error' });
-    }
   },
 
   passwordReset: async (request, response) => {
