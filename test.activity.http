@@ -1,0 +1,25 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+GET {{endpoint}}/api/admin/activities
+
+###
+GET {{endpoint}}/api/admin/activity/1
+
+###
+POST {{endpoint}}/api/admin/addActivity
+Content-Type: application/json
+
+{
+    "name": "Ferrari"
+}
+###
+DELETE {{endpoint}}/api/admin/48/deleteActivity
+
+###
+POST {{endpoint}}/api/admin/47/updateActivity
+Content-Type: application/json
+
+{
+    "name": "Non présent dans la liste"
+}

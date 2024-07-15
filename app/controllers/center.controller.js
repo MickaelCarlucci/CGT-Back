@@ -34,13 +34,13 @@ export default {
             .json({ error: "Le centre a déjà été crée"})
         }
 
-        const centeradded = await CenterDataMapper.create(nameCenter);
-        if (!centeradded) {
+        const centerAdded = await CenterDataMapper.create(nameCenter);
+        if (!centerAdded) {
             return response
             .status(500)
             .json({error: "Une erreur est survenue"})
         }
-        return response.status(200).send(centeradded)
+        return response.status(200).send(centerAdded)
     },
 
     deleteCenter: async (request, response) => {
@@ -65,6 +65,14 @@ export default {
             return response
             .status(404)
             .json({error: "Le centre n'a pas été trouvé"})
+        }
+
+        const checkCenter = await CenterDataMapper.checkIfExistCenter(nameCenter);
+
+        if (checkCenter[0]) {
+            return response
+            .status(401)
+            .json({ error: "Le centre a déjà été crée"})
         }
 
         const updatedCenter = await CenterDataMapper.update(nameCenter, centerId)
