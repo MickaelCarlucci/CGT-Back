@@ -1,131 +1,91 @@
--- Revert script for removing inserted rows from center
+BEGIN;
 
-DELETE FROM "center"
-WHERE "name" IN (
-    'Villeneuve d''Ascq',
-    'Reims',
-    'Bordeaux',
-    'Blagnac',
-    'Niort',
-    'Lyon',
-    'Laval',
-    'Le Mans',
-    'Orléans',
-    'Stephenson',
-    'Montigny',
-    'Montpellier',
-    'Belfort'
+DROP TABLE "center", "activity", "center_has_activity", "user", "role", "user_has_role", "section", "information", "leaflet_stored";
+-- Deploy CGT-back:V1 to pg
+
+BEGIN;
+
+CREATE table "center" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
 );
 
--- Revert script for removing inserted rows from activity
-
-DELETE FROM "activity"
-WHERE "name" IN (
-    'EDF',
-    'Groupama',
-    'Engie',
-    'Ada',
-    'Leroy Merlin',
-    'AG2R',
-    'Verisure',
-    'L''école francaise',
-    'GPSO',
-    'Smoove',
-    'Lease Plan',
-    'FGDR',
-    'Orias',
-    'Lyreco',
-    'Société Générale',
-    'LIDL',
-    'Veolia',
-    'MNT',
-    'Bouygues Immobilier',
-    'Octopus',
-    'AXA',
-    'Macif',
-    'Ekwateur',
-    'BNP',
-    'LMP',
-    'Bayi',
-    'Bouygues Telecom',
-    'Action Logement',
-    'Aiguillon Construction',
-    'Lyon Métropole Habitat',
-    '2FRH',
-    'ANFR',
-    'Orange',
-    'LG',
-    'Edenred',
-    'Grohe',
-    'Atlantic',
-    'JVC',
-    'OCP Répartition',
-    'Vestel',
-    'Karapace Courtage',
-    'Générali',
-    'OWF',
-    'Air Liquide',
-    'Iberdrola',
-    'France Billet',
-    'Non présent dans la liste'
+CREATE table "activity" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
 );
 
--- Revert script for removing inserted rows from center_has_activity
-
-DELETE FROM "center_has_activity"
-WHERE ("center_id", "activity_id") IN (
-    (1, 4),
-    (1, 6),
-    (1, 3),
-    (1, 45),
-    (1, 5),
-    (1, 14),
-    (1, 15),
-    (2, 42),
-    (2, 7),
-    (2, 43),
-    (2, 44),
-    (3, 6),
-    (3, 2),
-    (3, 18),
-    (3, 19),
-    (3, 20),
-    (3, 21),
-    (3, 8),
-    (3, 22),
-    (4, 1),
-    (4, 17),
-    (4, 2),
-    (5, 2),
-    (6, 28),
-    (6, 29),
-    (6, 30),
-    (6, 31),
-    (7, 27),
-    (8, 17),
-    (8, 23),
-    (8, 24),
-    (8, 25),
-    (8, 26),
-    (9, 32),
-    (9, 33),
-    (9, 34),
-    (9, 35),
-    (9, 36),
-    (9, 37),
-    (9, 38),
-    (9, 39),
-    (9, 40),
-    (9, 7),
-    (9, 41),
-    (10, 13),
-    (11, 4),
-    (11, 46),
-    (11, 9),
-    (11, 10),
-    (11, 11),
-    (11, 12),
-    (12, 17),
-    (13, 16),
-    (13, 1)
+CREATE table "center_has_activity" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "center_id" INT NOT NULL REFERENCES "center"("id") ON DELETE CASCADE,
+     "activity_id" INT NOT NULL REFERENCES "activity"("id") ON DELETE CASCADE,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE table "user" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "pseudo" VARCHAR(30) NOT NULL UNIQUE,
+     "firstname" VARCHAR(20) NOT NULL,
+     "lastname" VARCHAR(20) NOT NULL,
+     "mail" VARCHAR(50) NOT NULL UNIQUE,
+     "password" TEXT NOT NULL,
+     "first_question" VARCHAR(60) NOT NULL,
+     "first_answer" TEXT NOT NULL,
+     "second_question" VARCHAR(60) NOT NULL,
+     "second_answer" TEXT NOT NULL,
+     "center_id" INT NOT NULL REFERENCES "center"("id") DEFAULT 14,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
+);
+CREATE table "role" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
+);
+
+CREATE table "user_has_role" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "role_id" INT NOT NULL REFERENCES "role"("id") ON DELETE CASCADE,
+     "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
+     UNIQUE ("role_id", "user_id"),
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE table "section" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "name" VARCHAR(30) NOT NULL UNIQUE,
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
+);
+
+CREATE table "information" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "title" VARCHAR(100) NOT NULL,
+     "contain" TEXT,
+     "image_url" VARCHAR(50),
+     "user_id" INT NOT NULL REFERENCES "user"("id"),
+     "section_id" INT NOT NULL REFERENCES "section"("id"),
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
+);
+
+
+CREATE table "leaflet_stored" (
+     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+     "title" VARCHAR(30) NOT NULL,
+     "pdf_url" VARCHAR(40) NOT NULL,
+     "contain" TEXT,
+     "section_id" INT NOT NULL REFERENCES "section"("id"),
+     "center_id" INT NOT NULL REFERENCES "center"("id"),
+     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
+     "updated_at" TIMESTAMPTZ
+);
+
+COMMIT;
+
+COMMIT;
