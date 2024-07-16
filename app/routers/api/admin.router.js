@@ -20,5 +20,6 @@ router.route('/addActivity').post(controllerWrapper(activityController.addNewAct
 router.route('/:activityId(\\d+)/deleteActivity').delete(controllerWrapper(activityController.deleteActivity));
 router.route('/:activityId(\\d+)/updateActivity').post(controllerWrapper(activityController.modificationActivity));
 router.route('/link').post(controllerWrapper(activityController.linkActivityWithNewCenter));
+router.route('/activity/:activityId(\\d+)/centers').get(controllerWrapper(activityController.findCenterByActivity));
 
 export default router;

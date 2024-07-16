@@ -111,4 +111,21 @@ export default {
        return response.status(200).send(activityLinked);
     },
 
+    findCenterByActivity: async (request, response) => {
+        const {activityId} = request.params;
+        const activity = await ActivityDataMapper.findById(activityId)
+        if (!activity) {
+            return response
+            .status(500)
+            .json({error: "L'activité n'a pas été trouvé"})
+        }
+
+        const listCenterByActivity = await CenterHasActivityDataMapper.findCentersByActivityId(activityId)
+        if (!listCenterByActivity) {
+            return response
+            .status(500)
+            .json({error: "Une erreur est survenue"})
+        }
+        return response.status(200).send(listCenterByActivity)
+    }
 }

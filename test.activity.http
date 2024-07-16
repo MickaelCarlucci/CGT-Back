@@ -7,6 +7,9 @@ GET {{endpoint}}/api/admin/activities
 GET {{endpoint}}/api/admin/activity/1
 
 ###
+GET {{endpoint}}/api/admin/activity/1/centers
+
+###
 POST {{endpoint}}/api/admin/addActivity
 Content-Type: application/json
 
