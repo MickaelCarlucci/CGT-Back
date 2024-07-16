@@ -1,4 +1,5 @@
 import CenterDataMapper from "../datamappers/classCenter.datamapper.js";
+import * as CenterHasActivityDataMapper from "../datamappers/centerHasActivity.datamapper.js"
 
 export default {
     findAllCenters: async (_, response) => {
@@ -77,6 +78,19 @@ export default {
 
         const updatedCenter = await CenterDataMapper.update(nameCenter, centerId)
         return response.status(200).send(updatedCenter);
+    },
+
+    unlickActivityAndCenter: async (request, response) => {
+        const {centerId} = request.params;
+        const {activityId} = request.body;
+
+        const unlinkedActivity = await CenterHasActivityDataMapper.unlinkCenterFromActivity(centerId, activityId)
+        if(!unlinkedActivity) {
+            return response
+            .status(500)
+            .json({error: "Une erreur est survenue pendant l'opération"})
+        }
+        return response.status(200).send(unlinkedActivity)
     }
 
 }

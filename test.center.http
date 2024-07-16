@@ -23,3 +23,11 @@ Content-Type: application/json
 {
     "name": "Playa del Sol"
 }
+
+###
+DELETE {{endpoint}}/api/admin/center/1/unlink
+Content-Type: application/json
+
+{
+    "activityId": 2
+}

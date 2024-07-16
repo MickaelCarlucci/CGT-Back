@@ -49,7 +49,7 @@ export default {
         if (!activityId) {
             await client.query('ROLLBACK');
             return response
-                .status(500)
+                .status(404)
                 .json({ error: "L'id de l'activité nouvellement créée est indéfini" });
         }
          activityId = activityId.id
@@ -97,6 +97,18 @@ export default {
 
         const updatedActivity = await ActivityDataMapper.update(nameActivity, activityId)
         return response.status(200).send(updatedActivity);
-    }
+    },
+
+    linkActivityWithNewCenter: async (request, response) => {
+       const {centerId, activityId} = request.body;
+       const activityLinked = await CenterHasActivityDataMapper.linkCenterWithActivity(centerId, activityId);
+
+       if (!activityLinked) {
+        return response
+        .status(500)
+        .json({error: "Une erreur est survenue lors de la liaison de l'activité au centre"})
+       }
+       return response.status(200).send(activityLinked);
+    },
 
 }

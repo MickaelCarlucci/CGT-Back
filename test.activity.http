@@ -25,3 +25,12 @@ Content-Type: application/json
 {
     "name": "Non présent dans la liste"
 }
+
+###
+POST {{endpoint}}/api/admin/link
+Content-Type: application/json
+
+{
+    "centerId": 1,
+    "activityId": 2
+}
