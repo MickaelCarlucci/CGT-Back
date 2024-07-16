@@ -14,6 +14,15 @@ class ActivityDataMapper extends CoreAdminDataMapper {
         const result = await client.query(query);
         return result.rows;
     }
+    
+    async findActivityByName(name) {
+        const query = {
+            text: 'SELECT * FROM "activity" WHERE name=$1',
+            values: [name]
+        };
+        const result = await client.query(query);
+        return result.rows[0];
+    }
 }
 
 export default new ActivityDataMapper();

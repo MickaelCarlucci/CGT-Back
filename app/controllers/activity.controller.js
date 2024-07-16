@@ -1,4 +1,6 @@
 import ActivityDataMapper from "../datamappers/classActivity.datamapper.js";
+import * as CenterHasActivityDataMapper from "../datamappers/centerHasActivity.datamapper.js";
+import client from "../helpers/pg.client.js";
 
 export default {
     findAllActivities: async (_, response) => {
@@ -25,22 +27,41 @@ export default {
     },
 
     addNewActivity: async (request, response) => {
-        const nameActivity = request.body.name;
-        const checkActivity = await ActivityDataMapper.checkIfExistActivity(nameActivity);
+        const { name, centerId } = request.body;
 
+        await client.query('BEGIN');
+        const checkActivity = await ActivityDataMapper.checkIfExistActivity(name);
         if (checkActivity[0]) {
             return response
-            .status(401)
-            .json({ error: "L'activité a déjà été crée"})
+                .status(401)
+                .json({ error: "L'activité a déjà été créée" });
         }
 
-        const activityAdded = await ActivityDataMapper.create(nameActivity);
+        const activityAdded = await ActivityDataMapper.create(name);
         if (!activityAdded) {
             return response
-            .status(500)
-            .json({error: "Une erreur est survenue"})
+                .status(500)
+                .json({ error: "Une erreur est survenue lors de la création de l'activité" });
         }
-        return response.status(200).send(activityAdded)
+
+        let activityId = await ActivityDataMapper.findActivityByName(name);
+
+        if (!activityId) {
+            await client.query('ROLLBACK');
+            return response
+                .status(500)
+                .json({ error: "L'id de l'activité nouvellement créée est indéfini" });
+        }
+         activityId = activityId.id
+
+        // Lier l'activité au centre sélectionné
+        const linkActivityToCenter = await CenterHasActivityDataMapper.linkCenterWithActivity(centerId, activityId);
+        if (!linkActivityToCenter) {
+            return response
+                .status(500)
+                .json({ error: "Une erreur est survenue lors de la liaison de l'activité au centre" });
+        }
+        return response.status(200).send({ activity: activityAdded, link: linkActivityToCenter });
     },
 
     deleteActivity: async (request, response) => {
@@ -73,7 +94,7 @@ export default {
             .status(401)
             .json({ error: "L'activité a déjà été crée"})
         }
-        
+
         const updatedActivity = await ActivityDataMapper.update(nameActivity, activityId)
         return response.status(200).send(updatedActivity);
     }

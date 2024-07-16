@@ -11,10 +11,12 @@ POST {{endpoint}}/api/admin/addActivity
 Content-Type: application/json
 
 {
-    "name": "Ferrari"
+    "name": "Test 6",
+    "centerId": 1
 }
+
 ###
-DELETE {{endpoint}}/api/admin/48/deleteActivity
+DELETE {{endpoint}}/api/admin/56/deleteActivity
 
 ###
 POST {{endpoint}}/api/admin/47/updateActivity
