@@ -11,7 +11,8 @@ router.route('/center/:centerId(\\d+)').get(controllerWrapper(centerController.f
 router.route('/addCenter').post(controllerWrapper(centerController.addNewCenter));
 router.route('/:centerId(\\d+)/deleteCenter').delete(controllerWrapper(centerController.deleteCenter));
 router.route('/:centerId(\\d+)/updateCenter').post(controllerWrapper(centerController.modificationCenter));
-router.route('/center/:centerId(\\d+)/unlink').delete(controllerWrapper(centerController.unlickActivityAndCenter))
+router.route('/center/:centerId(\\d+)/unlink').delete(controllerWrapper(centerController.unlickActivityAndCenter));
+router.route('/center/:centerId(\\d+)/activities').get(controllerWrapper(centerController.findActivitiesByCenter));
 
 //activity routes
 router.route('/activities').get(controllerWrapper(activityController.findAllActivities));

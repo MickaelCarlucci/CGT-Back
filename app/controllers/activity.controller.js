@@ -113,8 +113,8 @@ export default {
 
     findCenterByActivity: async (request, response) => {
         const {activityId} = request.params;
-        const activity = await ActivityDataMapper.findById(activityId)
-        if (!activity) {
+        const verifyActivity = await ActivityDataMapper.findById(activityId)
+        if (!verifyActivity) {
             return response
             .status(500)
             .json({error: "L'activité n'a pas été trouvé"})

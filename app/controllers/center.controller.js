@@ -91,6 +91,24 @@ export default {
             .json({error: "Une erreur est survenue pendant l'opération"})
         }
         return response.status(200).send(unlinkedActivity)
+    },
+
+    findActivitiesByCenter: async (request, response) => {
+        const {centerId} = request.params;
+        const verifyCenter = await CenterDataMapper.findById(centerId);
+        if(!verifyCenter) {
+            return response
+            .status(500)
+            .json({error: "Le centre n'a pas été trouvé"})
+        }
+
+        const listActiviesByCenter = await CenterHasActivityDataMapper.findActivitiesByCenterId(centerId);
+        if(!listActiviesByCenter) {
+            return response
+            .status(500)
+            .json({error: "Une erreur est survenue"})
+        }
+        return response.status(200).send(listActiviesByCenter);
     }
 
 }
