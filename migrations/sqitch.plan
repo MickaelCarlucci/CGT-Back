@@ -5,3 +5,4 @@ V1 2024-05-29T13:49:00Z Mike <frewmike17@gmail.com> # mise en place de la base d
 V2 2024-06-18T13:48:21Z Mike <frewmike17@gmail.com> # modify restriction user
 seeding 2024-06-26T07:05:04Z Mike <frewmike17@gmail.com> # Add seeding activity, center and relation between their
 V3 2024-07-16T08:42:06Z Mickael Carlucci <frewm@Hamid> # add contraint for liaison table
+seedingRole 2024-07-17T13:27:14Z Mickael Carlucci <frewm@Hamid> # add seeding in table role
