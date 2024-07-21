@@ -27,6 +27,8 @@ router.route('/activity/:activityId(\\d+)/centers').get(controllerWrapper(activi
 
 //role routes
 router.route('/roles').get(controllerWrapper(roleController.findRoles));
-router.route('/role/:roleId(\\d+)').get(controllerWrapper(roleController.findRoleById))
+router.route('/role/:roleId(\\d+)').get(controllerWrapper(roleController.findRoleById));
+router.route('/role/:userId(\\d+)/link').post(controllerWrapper(roleController.linkUserWithRole));
+router.route('/role/:userId(\\d+)/unLink').delete(controllerWrapper(roleController.unlinkUserWithRole));
 
 export default router;

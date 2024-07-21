@@ -27,12 +27,25 @@ export default {
         const {userId} = request.params;
         const {roleId} = request.body;
 
-        const roleLinked = await roleDatamapper.linkUserWithRole(userId, roleId);
+        const roleLinked = await roleDatamapper.linkUserWithRole(roleId, userId);
         if (!roleLinked) {
             return response
             .status(500)
             .json({error: "Problème avec le serveur, veuillez réessayer plus tard"})
         }
         return response.status(200).send(roleLinked)
+    },
+
+    unlinkUserWithRole: async (request, response) => {
+        const {userId} = request.params;
+        const {roleId} = request.body;
+
+        const roleUnlinked = await roleDatamapper.unlinkUserFromRole(roleId, userId);
+        if (!roleUnlinked) {
+            return response
+            .status(500)
+            .json({error: "Problème avec le serveur, veuillez réessayer plus tard"})
+        }
+        return response.status(200).send(roleUnlinked)
     }
 }

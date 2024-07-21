@@ -5,3 +5,19 @@ GET {{endpoint}}/api/admin/roles
 
 ###
 GET {{endpoint}}/api/admin/role/2
+
+###
+POST {{endpoint}}/api/admin/role/1/link
+Content-Type: application/json
+
+{
+    "roleId": 3
+}
+
+###
+DELETE {{endpoint}}/api/admin/role/1/unLink
+Content-Type: application/json
+
+{
+    "roleId": 3
+}
