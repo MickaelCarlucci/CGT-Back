@@ -1,0 +1,7 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+GET {{endpoint}}/api/admin/roles
+
+###
+GET {{endpoint}}/api/admin/role/2

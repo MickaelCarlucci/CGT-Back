@@ -9,7 +9,7 @@ const jwtExpirationVerification = async (request, response, next) => {
       return response.status(401).json({ error: "Autorisation manquante" });
     }
   
-    // Le token est généralement sous la forme "Bearer <token>"
+    // Le token est sous la forme "Bearer <token>"
     const token = authHeader.split(' ')[1];
   
     if (!token) {

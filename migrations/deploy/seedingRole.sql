@@ -6,7 +6,7 @@ INSERT INTO "role" ("name")
 VALUES
 ('SuperAdmin'),
 ('Admin'),
-('Mod\u00E9rateur'),
+('Modérateur'),
 ('DSC'),
 ('Elus'),
 ('Membre');

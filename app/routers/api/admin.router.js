@@ -2,7 +2,9 @@ import { Router } from "express";
 
 import centerController from "../../controllers/center.controller.js";
 import activityController from "../../controllers/activity.controller.js";
+import roleController from "../../controllers/role.controller.js"
 import controllerWrapper from "../../helpers/controllerWrapper.js";
+
 
 const router = Router();
 //center routes
@@ -22,5 +24,9 @@ router.route('/:activityId(\\d+)/deleteActivity').delete(controllerWrapper(activ
 router.route('/:activityId(\\d+)/updateActivity').post(controllerWrapper(activityController.modificationActivity));
 router.route('/link').post(controllerWrapper(activityController.linkActivityWithNewCenter));
 router.route('/activity/:activityId(\\d+)/centers').get(controllerWrapper(activityController.findCenterByActivity));
+
+//role routes
+router.route('/roles').get(controllerWrapper(roleController.findRoles));
+router.route('/role/:roleId(\\d+)').get(controllerWrapper(roleController.findRoleById))
 
 export default router;
