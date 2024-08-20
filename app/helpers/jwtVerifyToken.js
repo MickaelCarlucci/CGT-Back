@@ -13,7 +13,7 @@ const jwtExpirationVerification = async (request, response, next) => {
     const token = authHeader.split(' ')[1];
   
     if (!token) {
-      return response.status(401).json({ error: "Token missing" });
+      return response.status(401).json({ error: "Token manquant" });
     }
   
     // Vérifier le token JWT
