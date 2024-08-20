@@ -21,3 +21,6 @@ Content-Type: application/json
 {
     "roleId": 3
 }
+
+###
+GET {{endpoint}}/api/admin/1/roles

@@ -30,5 +30,6 @@ router.route('/roles').get(controllerWrapper(roleController.findRoles));
 router.route('/role/:roleId(\\d+)').get(controllerWrapper(roleController.findRoleById));
 router.route('/role/:userId(\\d+)/link').post(controllerWrapper(roleController.linkUserWithRole));
 router.route('/role/:userId(\\d+)/unLink').delete(controllerWrapper(roleController.unlinkUserWithRole));
+router.route('/:userId(\\d+)/roles').get(controllerWrapper(roleController.checkRoleFromUser));
 
 export default router;

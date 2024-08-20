@@ -47,5 +47,17 @@ export default {
             .json({error: "Problème avec le serveur, veuillez réessayer plus tard"})
         }
         return response.status(200).send(roleUnlinked)
+    },
+
+    checkRoleFromUser: async (request, response) => {
+        const {userId} = request.params;
+        
+        const roleChecked = await roleDatamapper.findRolesByUser(userId);
+        if (!roleChecked) {
+            return response
+            .status(500)
+            .json({error: "Problème avec le serveur, veuillez réessayer plus tard"})
+        }
+        return response.status(200).send(roleChecked)
     }
 }
