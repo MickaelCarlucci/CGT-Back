@@ -17,4 +17,6 @@ router.route('/:userId(\\d+)/pseudo').patch(jwtExpirationVerification, controlle
 router.route('/:userId(\\d+)/password/modify').patch(jwtExpirationVerification, controllerWrapper(profileController.passwordModification));
 router.route('/:userId(\\d+)/mail').patch(jwtExpirationVerification, controllerWrapper(profileController.mailModification));
 
+router.route('/refresh-token').post(controllerWrapper(usersController.RefreshToken));
+
 export default router;

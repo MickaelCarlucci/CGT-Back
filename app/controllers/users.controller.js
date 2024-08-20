@@ -181,4 +181,28 @@ signUp: async (request, response) => {
     return response.status(200).send(updatedUser);
   },
 
+  RefreshToken: async (request,response) => {
+    const { refreshToken } = request.body;
+    if (!refreshToken) {
+        return response.status(401).json({ error: "Refresh token manquant" });
+    }
+
+    jwt.verify(refreshToken, JWTRefreshSecret, (error, user) => {
+        if (error) {
+            return response.status(403).json({ error: "Refresh token invalide ou expiré" });
+        }
+
+        // Générer un nouveau access token
+        const newAccessToken = jwt.sign({
+            id: user.id,
+            pseudo: user.pseudo,
+            mail: user.mail,
+        }, JWTSecret, { expiresIn: '15m' }); // Nouveau access token de courte durée
+
+        return response.status(200).json({
+            accessToken: newAccessToken,
+        });
+    });
+  }
+
 }
