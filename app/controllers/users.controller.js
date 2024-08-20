@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import * as userDatamapper from "../datamappers/users.datamapper.js";
 
 const JWTSecret = process.env.JWT_SECRET;
-const JWTRefreshExpiration = process.env.JWT_REFRESH_EXPIRATION;
+const JWTRefreshSecret = process.env.JWT_REFRESH_SECRET;
 const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
@@ -70,45 +70,35 @@ signUp: async (request, response) => {
     const { mail, password } = request.body;
 
     const user = await userDatamapper.findUserByEmail(mail);
-    //  vérifie que l'utilisateur existe
     if (!user) {
-      return response
-        .status(401)
-        .json({
-          error: "L'utilisateur n'éxiste pas ou le mot de passe est incorrect",
-        });
+        return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
-    //  vérifie que le password encrypté est correct avec la base de donnée
+
     const validPassword = await bcrypt.compare(password, user.password);
-
     if (!validPassword) {
-      return response
-        .status(401)
-        .json({
-          error: "L'utilisateur n'éxiste pas ou le mot de passe est incorrect",
-        });
+        return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
-    //  donne un token a l'utilisateur après les vérification
+
+    // Génération de l'access token
     const accessToken = jwt.sign({
-      id: user.id,
-      pseudo: user.pseudo,
-      mail: user.mail,
-    }, JWTSecret, {
-      expiresIn: JWTRefreshExpiration,
+        id: user.id,
+        pseudo: user.pseudo,
+        mail: user.mail,
+    }, JWTSecret, { expiresIn: '15m' }); // Access token de courte durée (15 minutes par exemple)
+
+    // Génération du refresh token
+    const refreshToken = jwt.sign({
+        id: user.id,
+        pseudo: user.pseudo,
+        mail: user.mail,
+    }, JWTRefreshSecret, { expiresIn: '7d' }); // Refresh token de plus longue durée (7 jours par exemple)
+
+    // Retourner l'access token et le refresh token dans la réponse
+    return response.status(200).json({
+        accessToken,
+        refreshToken,
     });
-
-    // retourne les information dans la réponse
-    const userAuth = {
-      id: user.id,
-      pseudo: user.pseudo,
-      email: user.mail,
-      createdAt: user.created_at,
-      updatedAt: user.updated_at,
-      token: accessToken,
-    };
-
-    return response.status(200).send(userAuth);
-  },
+},
 
   deleteUserAccount: async (request, response) => {
    
