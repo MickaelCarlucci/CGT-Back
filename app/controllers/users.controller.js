@@ -203,6 +203,31 @@ signUp: async (request, response) => {
             accessToken: newAccessToken,
         });
     });
+  },
+
+  verifyToken: (request, response) => {
+    const authHeader = request.headers['authorization'];
+
+    if (!authHeader) {
+      return response.status(401).json({ error: "Autorisation manquante" });
+    }
+
+    // Le token est sous la forme "Bearer <token>"
+    const token = authHeader.split(' ')[1];
+
+    if (!token) {
+      return response.status(401).json({ error: "Token manquant" });
+    }
+
+    // Vérifier la validité du token
+    jwt.verify(token, JWTSecret, (error, decoded) => {
+      if (error) {
+        return response.status(401).json({ error: "Token expiré ou invalide" });
+      }
+
+      // Token valide, renvoie les informations d'utilisateur si besoin
+      return response.status(200).json({ message: "Token valide", user: decoded });
+    });
   }
 
 }
