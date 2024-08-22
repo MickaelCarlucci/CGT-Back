@@ -3,11 +3,12 @@ import { Router } from "express";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
 import usersController from "../../controllers/users.controller.js";
 import profileController from "../../controllers/profile.controller.js";
+import userVerifyController from "../../controllers/users.verify.controller.js"
 import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
+
 
 const router = Router();
 
-router.route('/signup').post(controllerWrapper(usersController.signUp));
 router.route('/:userId(\\d+)/delete').delete(jwtExpirationVerification, controllerWrapper(usersController.deleteUserAccount));
 router.route('/signin').post(controllerWrapper(usersController.signIn));
 router.route('/password/reset').post(controllerWrapper(usersController.passwordReset))
@@ -19,5 +20,8 @@ router.route('/:userId(\\d+)/mail').patch(jwtExpirationVerification, controllerW
 
 router.route('/refresh-token').post(controllerWrapper(usersController.RefreshToken));
 router.route('/verify-token').post(controllerWrapper(usersController.verifyToken));
+
+router.route('/signup').post(controllerWrapper(userVerifyController.signUp))
+router.route('/verify').get(controllerWrapper(userVerifyController.mailVerify));
 
 export default router;
