@@ -8,7 +8,7 @@ const JWTRefreshSecret = process.env.JWT_REFRESH_SECRET;
 const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
-signUp: async (request, response) => {
+signup: async (request, response) => {
     delete request.body.passwordConfirm; // on supprime le passwordConfirm
 
     // on récupère les infos du body

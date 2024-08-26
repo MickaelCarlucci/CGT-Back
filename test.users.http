@@ -1,20 +1,25 @@
 @endpoint=http://localhost:{{$dotenv PORT}}
 
+
+###
+GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
+
 ###
 POST {{ endpoint }}/api/users/signup
 content-type: application/json
 
 {
-    "pseudo": "Mike",
-    "firstname": "Mickael",
-    "lastname": "Carlucci",
-    "mail": "frewmike59@yahoo.fr",
+    "pseudo": "Roro",
+    "firstname": "Robert",
+    "lastname": "Andrinus",
+    "mail": "frewmike17@gmail.com",
     "password": "Statue59",
     "firstQuestion": "Comment je m'appelle ?",
     "firstAnswer": "Mike",
     "secondQuestion": "J'habite dans quelle ville ?",
     "secondAnswer": "Erre",
-    "centerId": 1
+    "token": "Testkey",
+    "centerId": 2
 }
 
 ###

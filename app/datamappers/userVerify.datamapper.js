@@ -32,7 +32,7 @@ export async function findUserByToken(token) {
     centerId
 ) {
     const query = {
-        text: 'INSERT INTO "user_signup" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "token", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)) RETURNING (pseudo, mail, created_at)',
+        text: 'INSERT INTO "user_signup" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "token", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING (pseudo, mail, created_at)',
         values: [
           pseudo,
           firstname,

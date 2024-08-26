@@ -4,6 +4,16 @@ import * as userDatamapper from "../datamappers/users.datamapper.js";
 const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
+    findOneUser: async (request, response) => {
+      const mail = request.query.email;
+      const user = await userDatamapper.findUserByEmail(mail);
+      if (!user) {
+        return response.status(403).json({ error: "Utilisateur introuvable" });
+      }
+
+      return response.status(200).send(user);
+    },
+
     pseudoModification: async (request, response) => {
         const { userId } = request.params;
         const newPseudo = request.body.pseudo;
