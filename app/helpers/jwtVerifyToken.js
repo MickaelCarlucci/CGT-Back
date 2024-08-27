@@ -1,30 +1,33 @@
-const JWTSecret = process.env.JWT_SECRET;
 import jwt from "jsonwebtoken";
 
-const jwtExpirationVerification = async (request, response, next) => {
-    // Récupérer le token depuis le header Authorization
+const JWTSecret = process.env.JWT_SECRET;
+
+const jwtExpirationVerification = (request, response, next) => {
     const authHeader = request.headers['authorization'];
-  
+
     if (!authHeader) {
-      return response.status(401).json({ error: "Autorisation manquante" });
+        return response.status(401).json({ error: "Autorisation manquante" });
     }
-  
-    // Le token est sous la forme "Bearer <token>"
+
     const token = authHeader.split(' ')[1];
-  
+
     if (!token) {
-      return response.status(401).json({ error: "Token manquant" });
+        return response.status(401).json({ error: "Token manquant" });
     }
-  
-    // Vérifier le token JWT
+
     jwt.verify(token, JWTSecret, (error, user) => {
-      if (error) {
-        return response.status(401).json({ error: "Token expiré" });
-      }
+        if (error) {
+            if (error.name === 'TokenExpiredError') {
+                return response.status(401).json({ error: "Token expiré" });
+            } else {
+                return response.status(401).json({ error: "Token invalide" });
+            }
+        }
 
-      request.user = user;
-      next();
+        // Ajoute l'utilisateur à la requête pour l'accès dans les routes
+        request.user = user;
+        next();
     });
-  };
+};
 
-  export default jwtExpirationVerification;
+export default jwtExpirationVerification;

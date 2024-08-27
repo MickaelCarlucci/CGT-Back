@@ -85,6 +85,24 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
+  export async function updateFirstname(newFirstname, userId) {
+    const query = {
+        text: 'UPDATE "user" SET firstname=$1 WHERE id=$2 RETURNING (firstname, mail) ',
+        values: [newFirstname, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
+  export async function updateLastname(newLastname, userId) {
+    const query = {
+        text: 'UPDATE "user" SET lastname=$1 WHERE id=$2 RETURNING (lastname, mail) ',
+        values: [newLastname, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
   export async function updateMail(newMail, userId) {
     const query = {
         text: 'UPDATE "user" SET mail=$1 WHERE id=$2 RETURNING (pseudo, mail) ',
@@ -93,6 +111,43 @@ export async function findUserByEmail(mail) {
     const result = await client.query(query);
     return result.rows[0];
   }
+
+  export async function updateFirstQuestion(newQuestion, userId) {
+    const query = {
+        text: 'UPDATE "user" SET first_question=$1 WHERE id=$2 RETURNING (pseudo, first_question) ',
+        values: [newQuestion, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }  
+
+  export async function updateFirstAnswer(newAnswer, userId) {
+    const query = {
+        text: 'UPDATE "user" SET first_answer=$1 WHERE id=$2 ',
+        values: [newAnswer, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }  
+
+  export async function updateSecondQuestion(newQuestion, userId) {
+    const query = {
+        text: 'UPDATE "user" SET second_question=$1 WHERE id=$2 RETURNING (pseudo, second_question) ',
+        values: [newQuestion, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }  
+
+  export async function updateSecondAnswer(newAnswer, userId) {
+    const query = {
+        text: 'UPDATE "user" SET second_answer=$1 WHERE id=$2 ',
+        values: [newAnswer, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
 
   export async function updateUserPassword(mail, encryptedNewPassword) {
     const query = {

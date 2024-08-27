@@ -4,13 +4,25 @@ import * as userDatamapper from "../datamappers/users.datamapper.js";
 const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
-    findOneUser: async (request, response) => {
+    findOneUserByMail: async (request, response) => {
       const mail = request.query.email;
       const user = await userDatamapper.findUserByEmail(mail);
       if (!user) {
         return response.status(403).json({ error: "Utilisateur introuvable" });
       }
 
+      return response.status(200).send(user);
+    },
+
+    findOneUserById: async (request, response) => {
+      const {userId} = request.params;
+      const user = await userDatamapper.findUserById(userId);
+      if (!user) {
+        return response.status(403).json({ error: "Utilisateur introuvable" });
+      }
+      delete user.password;
+      delete user.first_answer;
+      delete user.second_answer;
       return response.status(200).send(user);
     },
 
@@ -31,6 +43,36 @@ export default {
         }
         return response.status(200).send(pseudoUpdated);
     },
+
+    firstnameModification: async (request, response) => {
+      const { userId } = request.params;
+      const newFirstname = request.body.firstname;
+      const user = await userDatamapper.findUserById(userId);
+       if (!user) {
+          return response.status(403).json({ error: "Utilisateur introuvable" });
+      }
+
+      const firstnameUpdated = await userDatamapper.updatePseudo(newFirstname, userId);
+      if (!firstnameUpdated) {
+        return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre pseudo" });
+      }
+      return response.status(200).send(firstnameUpdated);
+  },
+
+  lastnameModification: async (request, response) => {
+    const { userId } = request.params;
+    const newLastname = request.body.lastname;
+    const user = await userDatamapper.findUserById(userId);
+     if (!user) {
+        return response.status(403).json({ error: "Utilisateur introuvable" });
+    }
+
+    const lastnameUpdated = await userDatamapper.updateLastname(newLastname, userId);
+    if (!lastnameUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre pseudo" });
+    }
+    return response.status(200).send(lastnameUpdated);
+},
 
     passwordModification: async(request, response) => {
         const { userId } = request.params;
@@ -62,7 +104,7 @@ export default {
     mailModification: async(request, response) => {
         const { userId } = request.params;
 
-        const newEmail = request.body.email;
+        const newEmail = request.body.mail;
       
         const user = await userDatamapper.findUserById(userId);
         if (!user) {
@@ -76,11 +118,57 @@ export default {
       
         const emailUpdated = await userDatamapper.updateMail(newEmail, userId);
         if (!emailUpdated) {
-          return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre pseudo" });
+          return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre adresse email" });
         }
       
         return response.status(200).send(emailUpdated);
     },
+
+    firstQuestionAndAnswerModification: async(request, response) => {
+      const { userId } = request.params;
+
+      const newFirstQuestion = request.body.first_question;
+      const newFirstAnswer = request.body.first_answer;
+    
+      const user = await userDatamapper.findUserById(userId);
+      if (!user) {
+        return response.status(403).json({ error: "utilisateur introuvable" });
+      }
+    
+      const questionUpdated = await userDatamapper.updateFirstQuestion(newFirstQuestion, userId);
+      if (!questionUpdated) {
+        return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre question" });
+      }
+
+      const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
+      const encryptedAnswer = await bcrypt.hash(newFirstAnswer, salt)
+      
+      await userDatamapper.updateFirstAnswer(encryptedAnswer)
+      return response.status(200).send(questionUpdated);
+  },
+
+  secondQuestionAndAnswerModification: async(request, response) => {
+    const { userId } = request.params;
+
+    const newSecondQuestion = request.body.second_question;
+    const newSecondAnswer = request.body.second_answer;
+  
+    const user = await userDatamapper.findUserById(userId);
+    if (!user) {
+      return response.status(403).json({ error: "utilisateur introuvable" });
+    }
+  
+    const questionUpdated = await userDatamapper.updateSecondQuestion(newSecondQuestion, userId);
+    if (!questionUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre question" });
+    }
+
+    const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
+    const encryptedAnswer = await bcrypt.hash(newSecondAnswer, salt)
+    
+    await userDatamapper.updateSecondAnswer(encryptedAnswer)
+    return response.status(200).send(questionUpdated);
+},
     
 }
 

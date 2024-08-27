@@ -5,6 +5,9 @@
 GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
 
 ###
+GET {{endpoint}}/api/users//findUserProfile/1
+
+###
 POST {{ endpoint }}/api/users/signup
 content-type: application/json
 
@@ -24,6 +27,7 @@ content-type: application/json
 
 ###
 DELETE {{ endpoint }}/api/users/2/delete
+//rajouter le token pour test car route protégé
 content-type: application/json
 
 {
@@ -45,8 +49,8 @@ content-type: application/json
 
 {
     "mail": "frewmike59@yahoo.fr",
-    "answer1": "Mike",
-    "answer2": "Erre"
+    "answer1": "Oui et toi ?",
+    "answer2": "Kiba"
 }
 
 ###
@@ -60,6 +64,7 @@ content-type: application/json
 
 ###
 PATCH {{ endpoint }}/api/users/2/pseudo
+//rajouter le token pour test car route protégé
 Content-type: application/json
 
 {
@@ -68,6 +73,7 @@ Content-type: application/json
 
 ###
 PATCH {{ endpoint }}/api/users/2/password/modify
+//rajouter le token pour test car route protégé
 Content-type: application/json
 
 {
@@ -77,8 +83,9 @@ Content-type: application/json
 
 ###
 PATCH {{ endpoint }}/api/users/2/mail
+//rajouter le token pour test car route protégé
 Content-type: application/json
 
 {
-    "email": "frewmike17@gmail.com"
+    "mail": "frewmike17@gmail.com"
 }

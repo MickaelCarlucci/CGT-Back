@@ -131,12 +131,7 @@ signup: async (request, response) => {
     if (!user) {
       return response.status(401).json({ error: "Utilisateur introuvable" });
     }
-  
-    const questions = {
-      question1: user.first_question,
-      question2: user.second_question,
-    };
-  
+    
     const validAnswer1 = await bcrypt.compare(answer1, user.first_answer);
   
     if (!validAnswer1) {
@@ -144,13 +139,13 @@ signup: async (request, response) => {
     }
   
     const validAnswer2 = await bcrypt.compare(answer2, user.second_answer);
-  
+
     if (!validAnswer2) {
       return response.status(401).json({ error: "Réponse incorrecte" });
     }
   
     // Utilisez .json() pour envoyer une réponse JSON valide
-    return response.status(200).json({ questions, mail });
+    return response.status(200).json(mail);
   },
 
   resetingPassword: async (request, response) => {
