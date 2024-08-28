@@ -158,20 +158,14 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
-  export async function updateCenter(center) {
+  export async function updateCenter(center, userId) {
     const query = {
-        text: 'UPDATE "center" SET name=$1 RETURNING (name)',
-        values: [center],
+        text: 'UPDATE "user" SET center_id=$1 WHERE id=$2 RETURNING (center_id)',
+        values: [center, userId],
     };
     const result = await client.query(query);
     return result.rows[0];
   }
 
-  export async function updateActivity(activity) {
-    const query = {
-        text: 'UPDATE "activity" SET name=$1 RETURNING (name)',
-        values: [activity],
-    };
-    const result = await client.query(query);
-    return result.rows[0];
-  }
+
+  

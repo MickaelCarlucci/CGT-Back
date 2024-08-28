@@ -82,6 +82,7 @@ export default {
         if (!user) {
           return response.status(403).json({ error: "Utilisateur introuvable" });
         }
+        const mail = user.mail;
       
         const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
         if (!isPasswordValid) {
@@ -97,8 +98,11 @@ export default {
           return response.status(403).json({ error: "Le nouveau mot de passe ne peut pas être identique à votre ancien mot de passe" });
         }
       
-        await userDatamapper.updateUserPassword(userId, encryptedNewPassword);
-        return response.status(200).send();
+        const NewPassword = await userDatamapper.updateUserPassword(mail, encryptedNewPassword);
+        if (!NewPassword) {
+          return response.status(500).json({error: "Problème avec le server"})
+        }
+        return response.status(200).json({ mail });
     },
 
     mailModification: async(request, response) => {
@@ -169,6 +173,23 @@ export default {
     await userDatamapper.updateSecondAnswer(encryptedAnswer)
     return response.status(200).send(questionUpdated);
 },
+
+  ModificationUserCenter: async(request,response) => {
+    const {userId} = request.params;
+    const newCenter = request.body.center_id;
+
+    const user = await userDatamapper.findUserById(userId);
+    if (!user) {
+      return response.status(403).json({ error: "utilisateur introuvable" });
+    }
+
+
+    const centerUpdated = await userDatamapper.updateCenter(newCenter, userId)
+    if (!centerUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour du centre" });
+    }
+    return response.status(200).send(centerUpdated)
+  }
     
 }
 

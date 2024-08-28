@@ -89,3 +89,13 @@ Content-type: application/json
 {
     "mail": "frewmike17@gmail.com"
 }
+
+###
+PATCH {{ endpoint }}/api/users/2/center
+//rajouter le token pour test car route protégé
+Content-type: application/json
+
+{
+    "center_id": 3,
+    "userId": 1
+}

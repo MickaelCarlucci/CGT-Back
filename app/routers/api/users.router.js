@@ -21,9 +21,10 @@ router.route('/:userId(\\d+)/pseudo').patch(jwtExpirationVerification, controlle
 router.route('/:userId(\\d+)/firstname').patch(jwtExpirationVerification, controllerWrapper(profileController.firstnameModification));
 router.route('/:userId(\\d+)/lastname').patch(jwtExpirationVerification, controllerWrapper(profileController.lastnameModification));
 router.route('/:userId(\\d+)/mail').patch(jwtExpirationVerification, controllerWrapper(profileController.mailModification));
+router.route('/:userId(\\d+)/password/modify').patch(jwtExpirationVerification, controllerWrapper(profileController.passwordModification));
 router.route('/:userId(\\d+)/firstSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.firstQuestionAndAnswerModification));
 router.route('/:userId(\\d+)/secondSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.secondQuestionAndAnswerModification));
-router.route('/:userId(\\d+)/password/modify').patch(jwtExpirationVerification, controllerWrapper(profileController.passwordModification));
+router.route('/:userId(\\d+)/center').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationUserCenter));
 
 router.route('/refresh-token').post(controllerWrapper(usersController.RefreshToken));
 router.route('/verify-token').post(controllerWrapper(usersController.verifyToken));
