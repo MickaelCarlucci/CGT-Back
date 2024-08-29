@@ -2,7 +2,7 @@
 
 BEGIN;
 
-ALTER TABLE your_table_name
+ALTER TABLE "user"
 DROP CONSTRAINT IF EXISTS valid_email;
 
 COMMIT;

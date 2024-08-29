@@ -167,5 +167,14 @@ export async function findUserByEmail(mail) {
     return result.rows[0];
   }
 
+  export async function updateActivity(activityId, userId) {
+    const query = {
+      text:'UPDATE "user" SET activity_id=$1 WHERE id=$2',
+      values: [activityId, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
 
   

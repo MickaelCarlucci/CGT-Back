@@ -34,6 +34,6 @@ POST {{endpoint}}/api/admin/link
 Content-Type: application/json
 
 {
-    "centerId": 1,
-    "activityId": 2
+    "centerId": 14,
+    "activityId": 47
 }

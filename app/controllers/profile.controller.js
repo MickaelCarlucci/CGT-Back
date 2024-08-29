@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import * as userDatamapper from "../datamappers/users.datamapper.js";
+import CenterDataMapper from "../datamappers/classCenter.datamapper.js";
 
 const saltRounds = process.env.SALT_ROUNDS;
 
@@ -189,7 +190,22 @@ export default {
       return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour du centre" });
     }
     return response.status(200).send(centerUpdated)
+  },
+   
+  ModificationActivity: async(request, response) => {
+    const {userId} = request.params;
+    const activityId = request.body.activity_id;
+    const user = await userDatamapper.findUserById(userId);
+    if (!user) {
+      return response.status(403).json({ error: "utilisateur introuvable" });
+    }
+
+    const activityUpdated = await userDatamapper.updateActivity(activityId, userId)
+    if(!activityUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de l'activité" });
+    }
+
+    return response.status(200).send(activityUpdated)
   }
-    
 }
 

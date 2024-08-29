@@ -25,6 +25,7 @@ router.route('/:userId(\\d+)/password/modify').patch(jwtExpirationVerification, 
 router.route('/:userId(\\d+)/firstSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.firstQuestionAndAnswerModification));
 router.route('/:userId(\\d+)/secondSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.secondQuestionAndAnswerModification));
 router.route('/:userId(\\d+)/center').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationUserCenter));
+router.route('/:userId(\\d+)/activity').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationActivity));
 
 router.route('/refresh-token').post(controllerWrapper(usersController.RefreshToken));
 router.route('/verify-token').post(controllerWrapper(usersController.verifyToken));
