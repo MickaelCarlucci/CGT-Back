@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import * as userDatamapper from "../datamappers/users.datamapper.js";
+import * as roleDatamapper from "../datamappers/role.datamapper.js"
 
 const JWTSecret = process.env.JWT_SECRET;
 const JWTRefreshSecret = process.env.JWT_REFRESH_SECRET;
@@ -74,6 +75,11 @@ signup: async (request, response) => {
         return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
 
+    const userWithRole = await roleDatamapper.findRolesByUser(user.id)
+    if(!userWithRole) {
+      return response.status(401).json({ error: "L'utilisateur n'existe pas ou n'a pas été trouvé" });
+    }
+
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
         return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
@@ -93,11 +99,14 @@ signup: async (request, response) => {
         mail: user.mail,
     }, JWTRefreshSecret, { expiresIn: '7d' }); // Refresh token de plus longue durée (7 jours par exemple)
 
+      delete userWithRole.first_answer;
+      delete userWithRole.second_answer;
+      delete userWithRole.password;
     // Retourner l'access token et le refresh token dans la réponse
     return response.status(200).json({
         accessToken,
         refreshToken,
-        user
+        userWithRole
     });
 },
 

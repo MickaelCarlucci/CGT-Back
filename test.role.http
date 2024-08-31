@@ -11,7 +11,7 @@ POST {{endpoint}}/api/admin/role/1/link
 Content-Type: application/json
 
 {
-    "roleId": 3
+    "roleId": 2
 }
 
 ###

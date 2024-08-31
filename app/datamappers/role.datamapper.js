@@ -37,7 +37,7 @@ export async function unlinkUserFromRole(roleId, userId) {
 
 export async function findRolesByUser(userId) {
   const query = {
-    text: `SELECT u.pseudo, STRING_AGG(r.name, ', ') AS roles
+    text: `SELECT u.*, STRING_AGG(r.name, ', ') AS roles
 FROM "user" u
 JOIN "user_has_role" ur ON u.id = ur.user_id
 JOIN "role" r ON ur.role_id = r.id
@@ -46,5 +46,5 @@ GROUP BY u.id, u.pseudo;`,
     values: [userId],
   };
   const result = await client.query(query);
-  return result.rows;
+  return result.rows[0];
 }

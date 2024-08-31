@@ -169,7 +169,7 @@ export async function findUserByEmail(mail) {
 
   export async function updateActivity(activityId, userId) {
     const query = {
-      text:'UPDATE "user" SET activity_id=$1 WHERE id=$2',
+      text:'UPDATE "user" SET activity_id=$1 WHERE id=$2 RETURNING (activity_id)',
       values: [activityId, userId],
     };
     const result = await client.query(query);
