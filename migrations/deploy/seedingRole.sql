@@ -6,9 +6,10 @@ INSERT INTO "role" ("name")
 VALUES
 ('SuperAdmin'),
 ('Admin'),
-('Modérateur'),
+('Moderateur'),
 ('DSC'),
 ('Elus'),
-('Membre');
+('Membre'),
+('Nouvel inscrit');
 
 COMMIT;

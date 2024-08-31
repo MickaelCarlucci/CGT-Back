@@ -19,7 +19,7 @@ export async function findOneRole(roleId) {
 
 export async function linkUserWithRole(roleId, userId) {
   const query = {
-    text: 'INSERT INTO "user_has_role" (role_id, user_id) VALUES ($1, $2) RETURNING role_id, user_id',
+    text: 'INSERT INTO "user_has_role" ("role_id", "user_id") VALUES ($1, $2) RETURNING role_id, user_id',
     values: [roleId, userId],
   };
   const result = await client.query(query);

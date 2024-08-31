@@ -5,23 +5,22 @@
 GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
 
 ###
-GET {{endpoint}}/api/users//findUserProfile/1
+GET {{endpoint}}/api/users//findUserProfile/3
 
 ###
 POST {{ endpoint }}/api/users/signup
 content-type: application/json
 
 {
-    "pseudo": "Roro",
+    "pseudo": "Mike",
     "firstname": "Robert",
     "lastname": "Andrinus",
-    "mail": "frewmike17@gmail.com",
+    "mail": "frewmike59@yahoo.fr",
     "password": "Statue59",
     "firstQuestion": "Comment je m'appelle ?",
     "firstAnswer": "Mike",
     "secondQuestion": "J'habite dans quelle ville ?",
     "secondAnswer": "Erre",
-    "token": "Testkey",
     "centerId": 2
 }
 

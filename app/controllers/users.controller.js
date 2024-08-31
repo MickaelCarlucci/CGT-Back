@@ -63,6 +63,13 @@ signup: async (request, response) => {
         .status(500)
         .json({ error: "Une erreur est survenue pendant l'enregistrement" });
     }
+
+    const roleNewUser = await roleDatamapper.linkUserWithRole("7", user.id);
+    if(!roleNewUser) {
+      return response
+        .status(500)
+        .json({ error: "Une erreur est survenue pendant l'enregistrement du role" });
+    }
     // on renvoie les informations non sensibles du user
     return response.status(200).send(user);
   },
@@ -71,11 +78,16 @@ signup: async (request, response) => {
     const { mail, password } = request.body;
 
     const user = await userDatamapper.findUserByEmail(mail);
+
+    console.log('Utilisateur trouvé:', user);
+
     if (!user) {
         return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
 
+    
     const userWithRole = await roleDatamapper.findRolesByUser(user.id)
+    console.log('Rôles trouvés:', userWithRole);
     if(!userWithRole) {
       return response.status(401).json({ error: "L'utilisateur n'existe pas ou n'a pas été trouvé" });
     }
@@ -106,7 +118,7 @@ signup: async (request, response) => {
     return response.status(200).json({
         accessToken,
         refreshToken,
-        userWithRole
+        user: userWithRole
     });
 },
 

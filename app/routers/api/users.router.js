@@ -24,6 +24,7 @@ router.route('/:userId(\\d+)/mail').patch(jwtExpirationVerification, controllerW
 router.route('/:userId(\\d+)/password/modify').patch(jwtExpirationVerification, controllerWrapper(profileController.passwordModification));
 router.route('/:userId(\\d+)/firstSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.firstQuestionAndAnswerModification));
 router.route('/:userId(\\d+)/secondSecretSecurity').patch(jwtExpirationVerification, controllerWrapper(profileController.secondQuestionAndAnswerModification));
+router.route('/:userId(\\d+)/phone').patch(jwtExpirationVerification, controllerWrapper(profileController.phoneModification));
 router.route('/:userId(\\d+)/center').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationUserCenter));
 router.route('/:userId(\\d+)/activity').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationActivity));
 

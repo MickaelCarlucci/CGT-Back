@@ -49,7 +49,7 @@ export async function findUserByEmail(mail) {
     centerId
 ) {
     const query = {
-        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING (pseudo, mail, created_at)',
+        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, pseudo, mail, created_at;',
         values: [
           pseudo,
           firstname,
@@ -64,7 +64,7 @@ export async function findUserByEmail(mail) {
         ],
     };
     const result = await client.query(query);
-    return result.rows;
+    return result.rows[0];
   }
 
   export async function deleteUser(mail) {
@@ -143,6 +143,15 @@ export async function findUserByEmail(mail) {
     const query = {
         text: 'UPDATE "user" SET second_answer=$1 WHERE id=$2 ',
         values: [newAnswer, userId],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
+  export async function updatePhone(phone, userId) {
+    const query = {
+        text: 'UPDATE "user" SET phone=$1 WHERE id=$2 RETURNING phone',
+        values: [phone, userId],
     };
     const result = await client.query(query);
     return result.rows[0];

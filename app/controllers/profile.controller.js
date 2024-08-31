@@ -152,6 +152,24 @@ export default {
       return response.status(200).send(questionUpdated);
   },
 
+  phoneModification: async(request, response) => {
+    const { userId } = request.params;
+
+    const newPhone = request.body.phone;
+  
+    const user = await userDatamapper.findUserById(userId);
+    if (!user) {
+      return response.status(403).json({ error: "utilisateur introuvable" });
+    }
+  
+    const phoneUpdated = await userDatamapper.updatePhone(newPhone, userId);
+    if (!phoneUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre téléphone" });
+    }
+
+    return response.status(200).send(phoneUpdated);
+},
+
   secondQuestionAndAnswerModification: async(request, response) => {
     const { userId } = request.params;
 
