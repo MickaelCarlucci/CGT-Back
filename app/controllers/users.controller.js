@@ -79,7 +79,6 @@ signup: async (request, response) => {
 
     const user = await userDatamapper.findUserByEmail(mail);
 
-    console.log('Utilisateur trouvé:', user);
 
     if (!user) {
         return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });

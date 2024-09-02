@@ -1,0 +1,4 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+GET {{endpoint}}/api/search/users

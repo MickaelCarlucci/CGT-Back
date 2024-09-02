@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import centerController from "../../controllers/center.controller.js";
 import activityController from "../../controllers/activity.controller.js";
-import roleController from "../../controllers/role.controller.js"
+import roleController from "../../controllers/role.controller.js";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
 import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
 
