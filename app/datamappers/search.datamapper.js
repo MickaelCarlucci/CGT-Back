@@ -35,6 +35,7 @@ export async function findUsersByCenterByActivity(centerId, activityId) {
              JOIN "activity" ON "center_has_activity".activity_id = "activity".id
              WHERE "center".id = $1
              AND "activity".id = $2
+             AND "user".activity_id = $2
              AND "role".id != 1`,
       values: [centerId, activityId],
     };

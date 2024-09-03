@@ -2,3 +2,9 @@
 
 ###
 GET {{endpoint}}/api/search/users
+
+###
+GET {{endpoint}}/api/search/users/4
+
+###
+GET {{endpoint}}/api/search/users/2/7
