@@ -3,8 +3,12 @@ import * as pdfDatamapper from "../datamappers/pdf.datamapper.js";
 export default {
 
     upload: async (request, response) => {
-        const center_id = request.body.centerId;
-        const section_id = request.body.sectionId;
+        const center_id = request.body.center_id;
+        const section_id = request.body.section_id;
+
+        console.log('section_id:', request.body.section_id);
+        console.log('center_id:', request.body.center_id);
+        console.log('File:', request.file);
 
         if (!request.file) {
             return response.status(400).json({error: "aucun fichier téléchargé"})
@@ -12,6 +16,8 @@ export default {
         const title = request.file.originalname;
         //construit automatiquement l'url pour la bdd
         const pdf_url = `/uploads/${request.file.filename}`;
+
+
         
 
         const newPdf = await pdfDatamapper.create(
