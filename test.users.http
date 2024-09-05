@@ -5,7 +5,7 @@
 GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
 
 ###
-GET {{endpoint}}/api/users//findUserProfile/3
+GET {{endpoint}}/api/users/findUserProfile/1
 
 ###
 POST {{ endpoint }}/api/users/signup
@@ -13,8 +13,8 @@ content-type: application/json
 
 {
     "pseudo": "Mike",
-    "firstname": "Robert",
-    "lastname": "Andrinus",
+    "firstname": "Mickael",
+    "lastname": "Carlucci",
     "mail": "frewmike59@yahoo.fr",
     "password": "Statue59",
     "firstQuestion": "Comment je m'appelle ?",

@@ -4,10 +4,10 @@
 GET {{endpoint}}/api/admin/roles
 
 ###
-GET {{endpoint}}/api/admin/role/2
+GET {{endpoint}}/api/admin/role/1
 
 ###
-POST {{endpoint}}/api/admin/role/8/link
+POST {{endpoint}}/api/admin/role/1/link
 Content-Type: application/json
 
 {

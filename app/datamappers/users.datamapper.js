@@ -11,7 +11,12 @@ export async function findUserByEmail(mail) {
 
   export async function findUserById(id) {
     const query = {
-      text: 'SELECT * FROM "user" WHERE id=$1',
+      text: `SELECT "user".*, string_agg("role".name, ', ') AS roles 
+FROM "user"
+JOIN "user_has_role" ON "user".id = "user_has_role".user_id
+JOIN "role" ON "user_has_role".role_id = "role".id
+WHERE "user".id = $1
+GROUP BY "user".id;`,
       values: [id],
     };
     const result = await client.query(query);

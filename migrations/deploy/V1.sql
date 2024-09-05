@@ -74,9 +74,8 @@ CREATE table "information" (
 
 CREATE table "leaflet_stored" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-     "title" VARCHAR(30) NOT NULL,
-     "pdf_url" VARCHAR(40) NOT NULL,
-     "contain" TEXT,
+     "title" VARCHAR(200) NOT NULL,
+     "pdf_url" VARCHAR(200) NOT NULL,
      "section_id" INT NOT NULL REFERENCES "section"("id"),
      "center_id" INT NOT NULL REFERENCES "center"("id"),
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),

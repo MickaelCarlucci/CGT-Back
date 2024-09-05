@@ -2,7 +2,7 @@ import client from "../helpers/pg.client.js";
 
 export async function findAllRoles() {
   const query = {
-    text: 'SELECT * FROM "role"',
+    text: 'SELECT * FROM "role" WHERE "role".id != 1',
   };
   const result = await client.query(query);
   return result.rows;
