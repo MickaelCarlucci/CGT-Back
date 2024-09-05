@@ -1,0 +1,100 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+
+###
+GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
+
+###
+GET {{endpoint}}/api/users/findUserProfile/2
+
+###
+POST {{ endpoint }}/api/users/signup
+content-type: application/json
+
+{
+    "pseudo": "Mike",
+    "firstname": "Mickael",
+    "lastname": "Carlucci",
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Statue59",
+    "firstQuestion": "Comment je m'appelle ?",
+    "firstAnswer": "Mike",
+    "secondQuestion": "J'habite dans quelle ville ?",
+    "secondAnswer": "Erre",
+    "centerId": 2
+}
+
+###
+DELETE {{ endpoint }}/api/users/2/delete
+//rajouter le token pour test car route protégé
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr"
+}
+
+###
+POST {{ endpoint }}/api/users/signin
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Statue59"
+}
+
+###
+POST {{ endpoint }}/api/users/password/reset
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "answer1": "Oui et toi ?",
+    "answer2": "Kiba"
+}
+
+###
+PATCH  {{ endpoint }}/api/users/password/reseting
+content-type: application/json
+
+{
+    "mail": "frewmike59@yahoo.fr",
+    "password": "Malice17" 
+}
+
+###
+PATCH {{ endpoint }}/api/users/2/pseudo
+//rajouter le token pour test car route protégé
+Content-type: application/json
+
+{
+    "pseudo": "Miky"
+}
+
+###
+PATCH {{ endpoint }}/api/users/2/password/modify
+//rajouter le token pour test car route protégé
+Content-type: application/json
+
+{
+    "oldPassword": "Malice17",
+    "password": "Statue59"
+}
+
+###
+PATCH {{ endpoint }}/api/users/2/mail
+//rajouter le token pour test car route protégé
+Content-type: application/json
+
+{
+    "mail": "frewmike17@gmail.com"
+}
+
+###
+PATCH {{ endpoint }}/api/users/2/center
+//rajouter le token pour test car route protégé
+Content-type: application/json
+
+{
+    "center_id": 3,
+    "userId": 1
+}

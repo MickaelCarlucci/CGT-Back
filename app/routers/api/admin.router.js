@@ -3,6 +3,7 @@ import { Router } from "express";
 import centerController from "../../controllers/center.controller.js";
 import activityController from "../../controllers/activity.controller.js";
 import roleController from "../../controllers/role.controller.js";
+import sectionController from "../../controllers/section.controller.js";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
 import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
 
@@ -32,5 +33,9 @@ router.route('/role/:roleId(\\d+)').get(controllerWrapper(roleController.findRol
 router.route('/role/:userId(\\d+)/link').post( controllerWrapper(roleController.linkUserWithRole));
 router.route('/role/:userId(\\d+)/unLink').delete(jwtExpirationVerification, controllerWrapper(roleController.unlinkUserWithRole));
 router.route('/:userId(\\d+)/roles').get(controllerWrapper(roleController.checkRoleFromUser));
+
+//section routes
+router.route('/sections').get(controllerWrapper(sectionController.getAllSection));
+
 
 export default router;
