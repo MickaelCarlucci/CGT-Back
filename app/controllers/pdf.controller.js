@@ -1,4 +1,6 @@
 import * as pdfDatamapper from "../datamappers/pdf.datamapper.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 export default {
 
@@ -33,13 +35,20 @@ export default {
     },
 
     download: async (request, response) => {
-        const {userId} = request.params;
-        console.log(userId);
-        const pdf = await pdfDatamapper.findById(userId)
-        if (!pdf) {
-            return response.status(500).json({error: "Une erreur est survenue lors de la récupération du fichier."})
-        }
-        return response.status(200).send(pdf);
+        const {filename} = request.params;
+        console.log("Demande de téléchargement pour le fichier:", filename);
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        const filePath = path.join(__dirname, '../../uploads', filename);
+
+        console.log("Chemin complet du fichier:", filePath);
+        
+        response.download(filePath, error => {
+            if (error) {
+                response.status(500).json({error: "Erreur lors du téléchargement du fichier"})
+            }
+        });
+
     },
 
     getAll: async (request, response) => {
@@ -48,6 +57,15 @@ export default {
             return response.status(500).json({error: "Une erreur est survenue lors de la récupération des fichiers."})
         }
         return response.status(200).send(pdfs)
-    }
+    },
+
+    getDocumentsBySection: async(request, response) => {
+        const sectionId = request.params.sectionId;
+        const documents = await pdfDatamapper.findAllPdfBySection(sectionId);
+        if (!documents) {
+            return response.status(500).json({error: "Une erreur est survenue lors du chargement des documents"})
+        }
+        return response.status(200).send(documents)
+    },
 }
 

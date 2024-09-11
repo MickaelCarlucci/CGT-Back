@@ -11,3 +11,4 @@ add_email_constraint 2024-08-27T14:00:36Z Mickael Carlucci <frewm@Hamid> # Add e
 center_has_activity_id 2024-08-28T12:51:41Z Mickael Carlucci <frewm@Hamid> # add new colunm in table user
 changeColumn 2024-08-28T15:22:26Z Mickael Carlucci <frewm@Hamid> # Change name and props column for table user
 phone_column 2024-08-31T15:23:56Z Mickael Carlucci <frewm@Hamid> # Add a column for userTable
+poll_table 2024-09-11T06:33:08Z Mickael Carlucci <frewm@Hamid> # add a new table for poll

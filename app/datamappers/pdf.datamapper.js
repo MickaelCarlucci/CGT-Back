@@ -26,12 +26,12 @@ export async function create(title, pdf_url, section_id, center_id) {
       return result.rows[0];
 }
 
-export async function findAllPdfBySection(section_id) {
+export async function findAllPdfBySection(sectionId) {
     const query = {
     text: `SELECT "leaflet_stored".id, "leaflet_stored".title, "leaflet_stored".pdf_url FROM "leaflet_stored"
 JOIN "section" ON "leaflet_stored".section_id = "section".id
 WHERE "leaflet_stored".section_id = $1`,
-        values: [section_id]
+        values: [sectionId]
      }
     const result = await client.query(query);
     return result.rows;
