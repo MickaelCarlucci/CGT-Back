@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE "poll";
+DROP TABLE "poll_options", "poll";
 
 COMMIT;

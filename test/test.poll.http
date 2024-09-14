@@ -1,0 +1,25 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+POST {{endpoint}}/api/poll/newPoll
+Content-Type: application/json
+
+{
+    "question": "Quel est votre syndicat préféré ?",
+    "options":  ["CGT", "SUD", "CFDT"]
+}
+
+
+###
+POST {{endpoint}}/api/poll/6/1
+Content-Type: application/json
+
+{
+    "optionId": 19
+}
+
+###
+GET {{endpoint}}/api/poll/polls
+
+###
+GET {{endpoint}}/api/poll/2
