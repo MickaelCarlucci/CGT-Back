@@ -34,8 +34,12 @@ router.route('/role/:userId(\\d+)/link').post( controllerWrapper(roleController.
 router.route('/role/:userId(\\d+)/unLink').delete(jwtExpirationVerification, controllerWrapper(roleController.unlinkUserWithRole));
 router.route('/:userId(\\d+)/roles').get(controllerWrapper(roleController.checkRoleFromUser));
 
-//section routes
+//section route
 router.route('/sections').get(controllerWrapper(sectionController.getAllSection));
+
+//contact routes
+router.route('/elected').get(controllerWrapper(roleController.getElected));
+router.route('/elected/:centerId(\\d+)').get(controllerWrapper(roleController.getElectedByCenter));
 
 
 export default router;

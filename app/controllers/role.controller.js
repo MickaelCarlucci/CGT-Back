@@ -59,5 +59,23 @@ export default {
             .json({error: "Problème avec le serveur, veuillez réessayer plus tard"})
         }
         return response.status(200).send(roleChecked)
+    },
+
+    getElected: async (request, response) => {
+        const elected = await roleDatamapper.findElected();
+        if(!elected) {
+            return response.status(500).json({error: "Les élus n'ont pas été trouvé"});
+        }
+        return response.status(200).send(elected);
+    },
+
+    getElectedByCenter: async (request, response) => {
+        const {centerId} = request.params;
+        const elected = await roleDatamapper.findElectedByCenter(centerId)
+        if(!elected) {
+            return response.status(500).json({error: "Impossible de chargé la liste des élus."})
+        }
+        return response.status(200).send(elected);
     }
+    
 }

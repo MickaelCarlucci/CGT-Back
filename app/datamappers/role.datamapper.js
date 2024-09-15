@@ -48,3 +48,29 @@ GROUP BY u.id, u.pseudo;`,
   const result = await client.query(query);
   return result.rows[0];
 }
+
+export async function findElected() {
+  const query = {
+    text: `SELECT "user".id, "user".lastname, "user".firstname, "user".phone, "user".mail, "user".center_id FROM "user"
+          JOIN "user_has_role" ON "user".id = "user_has_role".user_id
+          JOIN "role" ON "user_has_role".role_id = "role".id
+          WHERE "role".id = 5;`,
+  }
+  const result = await client.query(query);
+  return result.rows;
+}
+
+export async function findElectedByCenter(centerId) {
+  const query = {
+    text: `SELECT "user".id, "user".lastname, "user".firstname, "user".phone, "user".mail, "user".center_id FROM "user"
+          JOIN "user_has_role" ON "user".id = "user_has_role".user_id
+          JOIN "role" ON "user_has_role".role_id = "role".id
+          WHERE "role".id = 5
+          AND WHERE "user".center_id = $1;`,
+    values: [centerId]
+  }
+  const result = await client.query(query);
+  return result.rows;
+}
+
+

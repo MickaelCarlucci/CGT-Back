@@ -24,3 +24,6 @@ Content-Type: application/json
 
 ###
 GET {{endpoint}}/api/admin/1/roles
+
+###
+GET {{endpoint}}/api/admin/elected
