@@ -27,3 +27,6 @@ GET {{endpoint}}/api/admin/1/roles
 
 ###
 GET {{endpoint}}/api/admin/elected
+
+###
+GET {{endpoint}}/api/admin/elected/2

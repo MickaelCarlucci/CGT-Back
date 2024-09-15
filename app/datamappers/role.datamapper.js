@@ -66,7 +66,7 @@ export async function findElectedByCenter(centerId) {
           JOIN "user_has_role" ON "user".id = "user_has_role".user_id
           JOIN "role" ON "user_has_role".role_id = "role".id
           WHERE "role".id = 5
-          AND WHERE "user".center_id = $1;`,
+          AND "user".center_id = $1;`,
     values: [centerId]
   }
   const result = await client.query(query);
