@@ -57,7 +57,7 @@ export async function checkVote(pollId, userId) {
 
 export async function findAll() {
   const query = {
-    text: `SELECT * FROM "poll";`,
+    text: `SELECT * FROM "poll" ORDER BY "poll".created_at DESC;`,
   };
   const result = await client.query(query);
   return result.rows;
