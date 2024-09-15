@@ -11,7 +11,7 @@ Content-Type: application/json
 
 
 ###
-POST {{endpoint}}/api/poll/6/1
+POST {{endpoint}}/api/poll/vote/6/1
 Content-Type: application/json
 
 {
@@ -22,4 +22,14 @@ Content-Type: application/json
 GET {{endpoint}}/api/poll/polls
 
 ###
-GET {{endpoint}}/api/poll/2
+GET {{endpoint}}/api/poll/latest
+
+###
+GET {{endpoint}}/api/poll/5/vote-status/1
+
+###
+GET {{endpoint}}/api/poll/5/options
+
+###
+DELETE {{endpoint}}/api/poll/delete/8
+
