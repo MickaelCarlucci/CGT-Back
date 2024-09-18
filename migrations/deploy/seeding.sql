@@ -149,6 +149,7 @@ INSERT INTO "section"("name")
 VALUES
 ('Accord d''entreprise'),
 ('Tract'),
-('CSE');
+('CSE'),
+('News');
 
 COMMIT;

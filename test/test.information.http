@@ -1,0 +1,14 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+POST {{endpoint}}/api/information/new/1
+Content-Type: application/json
+
+{
+    "title": "Bienvenue chez vous",
+    "contain": "Nous vous souhaitons la bienvenue sur le site de la CGT. Vous pourrez récuperer ici, tous les documents relatifs à l'entreprise.",
+    "sectionId": 4
+}
+
+###
+GET {{endpoint}}/api/information/latest

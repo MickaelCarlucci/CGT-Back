@@ -64,7 +64,7 @@ CREATE table "information" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      "title" VARCHAR(100) NOT NULL,
      "contain" TEXT,
-     "image_url" VARCHAR(50),
+     "image_url" TEXT,
      "user_id" INT NOT NULL REFERENCES "user"("id"),
      "section_id" INT NOT NULL REFERENCES "section"("id"),
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
