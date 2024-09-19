@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
   router.route('/upload').post(upload.single('file'), controllerWrapper(pdfController.upload));
   router.route('/download/:filename').get(controllerWrapper(pdfController.download));
   router.route('/views').get(controllerWrapper(pdfController.getAll));
+  router.route('/last').get(controllerWrapper(pdfController.getLastTract));
   router.route('/views/:sectionId(\\d+)').get(controllerWrapper(pdfController.getDocumentsBySection));
 
 

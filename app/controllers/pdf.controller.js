@@ -56,7 +56,15 @@ export default {
         if(!pdfs) {
             return response.status(500).json({error: "Une erreur est survenue lors de la récupération des fichiers."})
         }
-        return response.status(200).send(pdfs)
+        return response.status(200).send(pdfs);
+    },
+
+    getLastTract: async (request, response) => {
+        const pdf = await pdfDatamapper.findLastTract();
+        if(!pdf) {
+            return response.status(500).json({error: "Une erreur est survenue lors de la récupération du fichier."})
+        }
+        return response.status(200).send(pdf)
     },
 
     getDocumentsBySection: async(request, response) => {

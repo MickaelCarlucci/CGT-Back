@@ -7,6 +7,9 @@ GET {{endpoint}}/api/pdf/download/9
 GET {{endpoint}}/api/pdf/views
 
 ###
+GET {{endpoint}}/api/pdf/last
+
+###
 GET {{endpoint}}/api/pdf/views/2
 
 
