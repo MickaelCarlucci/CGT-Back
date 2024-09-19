@@ -148,7 +148,11 @@ export default {
       const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
       const encryptedAnswer = await bcrypt.hash(newFirstAnswer, salt)
       
-      await userDatamapper.updateFirstAnswer(encryptedAnswer)
+      const answerUpdated = await userDatamapper.updateFirstAnswer(encryptedAnswer, userId);
+      if (!answerUpdated) {
+        return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre réponse" });
+      }
+      
       return response.status(200).send(questionUpdated);
   },
 
@@ -175,6 +179,7 @@ export default {
 
     const newSecondQuestion = request.body.second_question;
     const newSecondAnswer = request.body.second_answer;
+
   
     const user = await userDatamapper.findUserById(userId);
     if (!user) {
@@ -188,8 +193,13 @@ export default {
 
     const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
     const encryptedAnswer = await bcrypt.hash(newSecondAnswer, salt)
+    console.log(encryptedAnswer);
     
-    await userDatamapper.updateSecondAnswer(encryptedAnswer)
+    const answerUpdated = await userDatamapper.updateSecondAnswer(encryptedAnswer, userId);
+    console.log(answerUpdated);
+    if (!answerUpdated) {
+      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre réponse" });
+    }
     return response.status(200).send(questionUpdated);
 },
 

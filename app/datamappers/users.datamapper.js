@@ -128,7 +128,7 @@ GROUP BY "user".id;`,
 
   export async function updateFirstAnswer(newAnswer, userId) {
     const query = {
-        text: 'UPDATE "user" SET first_answer=$1 WHERE id=$2 ',
+        text: 'UPDATE "user" SET first_answer=$1 WHERE id=$2 RETURNING (first_question)',
         values: [newAnswer, userId],
     };
     const result = await client.query(query);
@@ -146,7 +146,7 @@ GROUP BY "user".id;`,
 
   export async function updateSecondAnswer(newAnswer, userId) {
     const query = {
-        text: 'UPDATE "user" SET second_answer=$1 WHERE id=$2 ',
+        text: 'UPDATE "user" SET second_answer=$1 WHERE id=$2 RETURNING (second_question) ',
         values: [newAnswer, userId],
     };
     const result = await client.query(query);

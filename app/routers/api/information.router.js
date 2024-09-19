@@ -20,19 +20,19 @@ const upload = multer({ storage: storage });
 const router = Router();
 
 // Route pour créer une nouvelle information avec un fichier image
-router.route('/news/:userId(\\d+)')
-  .post(upload.single('image'), controllerWrapper(infoController.newInformation));
+router.route('/news/:userId(\\d+)')//!
+  .post(jwtExpirationVerification, upload.single('image'), controllerWrapper(infoController.newInformation));
 
 // Route pour la dernière nouvelle crée
-router.route('/news')
+router.route('/news')//!
   .get(controllerWrapper(infoController.recentInformation));
 
 // Route pour obtenir les dernières informations
-router.route('/latest')
+router.route('/latest')//!
   .get(controllerWrapper(infoController.LastInformations));
 
 //Route pour supprimer une information
-router.route('/delete/:newsId(\\d+)')
-  .delete(controllerWrapper(infoController.deleteInformation));
+router.route('/delete/:newsId(\\d+)')//!
+  .delete(jwtExpirationVerification, controllerWrapper(infoController.deleteInformation));
 
 export default router;

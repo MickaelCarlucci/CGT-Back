@@ -9,7 +9,7 @@ const JWTRefreshSecret = process.env.JWT_REFRESH_SECRET;
 const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
-signup: async (request, response) => {
+  signup: async (request, response) => {
     delete request.body.passwordConfirm; // on supprime le passwordConfirm
 
     // on récupère les infos du body
@@ -26,11 +26,13 @@ signup: async (request, response) => {
         centerId
     } = request.body;
 
+    // On convertit l'email en minuscule
+    const normalizedMail = mail.toLowerCase();
 
     // on check que les entrées du user ne correspondent pas aux entrées unique de la table user
     const userEntriesCheck = await userDatamapper.checkUsersInformations(
       pseudo,
-      mail,
+      normalizedMail,
     );
 
     if (userEntriesCheck[0]) {
@@ -49,7 +51,7 @@ signup: async (request, response) => {
         pseudo,
         firstname,
         lastname,
-        mail,
+        normalizedMail,  // On utilise l'email en minuscule
         encryptedPassword,
         firstQuestion,
         encryptedAnswer1,
@@ -74,10 +76,12 @@ signup: async (request, response) => {
     return response.status(200).send(user);
   },
 
+
   signIn: async (request, response) => {
     const { mail, password } = request.body;
+    const normalizedMail = mail.toLowerCase();
 
-    const user = await userDatamapper.findUserByEmail(mail);
+    const user = await userDatamapper.findUserByEmail(normalizedMail);
 
 
     if (!user) {
@@ -145,8 +149,9 @@ signup: async (request, response) => {
 
   passwordReset: async (request, response) => {
     const { mail, answer1, answer2 } = request.body;
+    const normalizedMail = mail.toLowerCase();
   
-    const user = await userDatamapper.findUserByEmail(mail);
+    const user = await userDatamapper.findUserByEmail(normalizedMail);
   
     if (!user) {
       return response.status(401).json({ error: "Utilisateur introuvable" });
@@ -165,15 +170,16 @@ signup: async (request, response) => {
     }
   
     // Utilisez .json() pour envoyer une réponse JSON valide
-    return response.status(200).json(mail);
+    return response.status(200).json(normalizedMail);
   },
 
   resetingPassword: async (request, response) => {
     delete request.body.passwordConfirm;
 
     const { mail, password } = request.body;
+    const normalizedMail = mail.toLowerCase();
 
-    const user = await userDatamapper.findUserByEmail(mail);
+    const user = await userDatamapper.findUserByEmail(normalizedMail);
 
     if (!user) {
       return response.status(401).json({ error: "Utilisateur introuvable" });
@@ -184,7 +190,7 @@ signup: async (request, response) => {
     const encryptedPassword = await bcrypt.hash(password, salt);
 
     const updatedUser = await userDatamapper.updateUserPassword(
-      mail,
+      normalizedMail,
       encryptedPassword,
     );
 
