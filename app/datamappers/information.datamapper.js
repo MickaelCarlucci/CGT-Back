@@ -9,6 +9,16 @@ export async function create(title, contain, imageUrl, userId, sectionId) {
     return result.rows[0];
 }
 
+export async function lastNews() {
+    const query = {
+        text: `SELECT * FROM "information"
+        ORDER BY created_at DESC
+        LIMIT 1;`
+    }
+    const result = await client.query(query);
+    return result.rows[0];
+}
+
 export async function TenLastNews() {
     const query = {
         text: `SELECT * FROM "information"
@@ -17,3 +27,13 @@ export async function TenLastNews() {
     const response = await client.query(query);
     return response.rows;
 }
+
+export async function DeleteNews(newsId) {
+    const query = {
+        text: `DELETE FROM "information" WHERE id = $1`,
+        values: [newsId]
+    }
+    const response = await client.query(query);
+    return response.rows[0];
+}
+

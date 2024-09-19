@@ -1,7 +1,7 @@
 @endpoint=http://localhost:{{$dotenv PORT}}
 
 ###
-POST {{endpoint}}/api/information/new/1
+POST {{endpoint}}/api/information/news/1
 Content-Type: application/json
 
 {
@@ -11,4 +11,10 @@ Content-Type: application/json
 }
 
 ###
+GET {{endpoint}}/api/information/news
+
+###
 GET {{endpoint}}/api/information/latest
+
+###
+DELETE {{endpoint}}/api/information/delete/2
