@@ -28,7 +28,7 @@ router.route('/:userId(\\d+)/phone').patch(jwtExpirationVerification, controller
 router.route('/:userId(\\d+)/center').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationUserCenter));//!
 router.route('/:userId(\\d+)/activity').patch(jwtExpirationVerification, controllerWrapper(profileController.ModificationActivity));//!
 
-router.route('/refresh-token').post(controllerWrapper(usersController.RefreshToken));//!
+router.route('/refresh-token').post(controllerWrapper(usersController.refreshToken));//!
 router.route('/verify-token').post(controllerWrapper(usersController.verifyToken));//!
 
 //router.route('/signup').post(controllerWrapper(userVerifyController.signUp));

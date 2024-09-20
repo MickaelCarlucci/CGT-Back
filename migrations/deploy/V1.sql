@@ -35,7 +35,7 @@ CREATE table "user" (
      "second_question" VARCHAR(60) NOT NULL,
      "second_answer" VARCHAR(50) NOT NULL,
      "center_id" INT NOT NULL REFERENCES "center"("id") DEFAULT 14,
-     "last_activity" TIMESTAMPTZ,
+     "last_activity" TIMESTAMPTZ DEFAULT now(),
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );

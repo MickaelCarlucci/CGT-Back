@@ -66,7 +66,7 @@ export default {
         .json({ error: "Une erreur est survenue pendant l'enregistrement" });
     }
 
-    const roleNewUser = await roleDatamapper.linkUserWithRole("7", user.id);
+    const roleNewUser = await roleDatamapper.linkUserWithRole("9", user.id);
     if(!roleNewUser) {
       return response
         .status(500)
@@ -203,58 +203,68 @@ export default {
     return response.status(200).send(updatedUser);
   },
 
-  RefreshToken: async (request,response) => {
+  refreshToken: async (request, response) => {
     const { refreshToken } = request.body;
+  
+    // Vérifier si le refreshToken est fourni
     if (!refreshToken) {
-        return response.status(401).json({ error: "Refresh token manquant" });
+      return response.status(401).json({ error: "Refresh token manquant" });
     }
-
-    jwt.verify(refreshToken, JWTRefreshSecret, async (error, user) => {
-        if (error) {
-            return response.status(403).json({ error: "Refresh token invalide ou expiré" });
-        }
-
-        // Générer un nouveau access token
-        const newAccessToken = jwt.sign({
-            id: user.id,
-            pseudo: user.pseudo,
-            mail: user.mail,
-        }, JWTSecret, { expiresIn: '15m' }); // Nouveau access token de courte durée
-
-        const updatedLastActivity = await userDatamapper.updateLastActivity(user.id);
-        if(!updatedLastActivity) {
-          return response.status(500).json({error: "impossible de mettre à jour la date d'activité"})
-        }
-
-        return response.status(200).json({
-            accessToken: newAccessToken,
-        });
-    });
+  
+    try {
+      // Vérification du refreshToken avec JWT
+      const user = jwt.verify(refreshToken, JWTRefreshSecret);
+      console.log("Vérification du refreshToken réussie : ", user);
+  
+      // Générer un nouveau access token
+      const newAccessToken = jwt.sign(
+        {
+          id: user.id,
+          pseudo: user.pseudo,
+          mail: user.mail,
+        },
+        JWTSecret,
+        { expiresIn: '15m' } // Nouveau access token avec une durée de vie de 15 minutes
+      );
+      console.log("Nouveau accessToken généré :", newAccessToken);
+  
+      // Mettre à jour la dernière activité de l'utilisateur
+      const updatedLastActivity = await userDatamapper.updateLastActivity(user.id);
+      if (!updatedLastActivity) {
+        return response.status(500).json({ error: "Impossible de mettre à jour la date d'activité" });
+      }
+      console.log("Mise à jour de la dernière activité réussie :", updatedLastActivity);
+      // Retourner le nouveau accessToken
+      return response.status(200).json({
+        accessToken: newAccessToken,
+      });
+    } catch (error) {
+      console.error("Erreur lors du rafraîchissement du token :", error);
+      return response.status(403).json({ error: "Refresh token invalide ou expiré" });
+    }
   },
 
   verifyToken: (request, response) => {
     const authHeader = request.headers['authorization'];
-
+  
     if (!authHeader) {
       return response.status(401).json({ error: "Autorisation manquante" });
     }
-
-    // Le token est sous la forme "Bearer <token>"
-    const token = authHeader.split(' ')[1];
-
+  
+    const token = authHeader.split(' ')[1]; // Récupérer le token dans l'en-tête
+  
     if (!token) {
       return response.status(401).json({ error: "Token manquant, merci de vous reconnecter" });
     }
-
-    // Vérifier la validité du token
+  
     jwt.verify(token, JWTSecret, (error, decoded) => {
       if (error) {
         return response.status(401).json({ error: "Token expiré ou invalide" });
       }
-
-      // Token valide, renvoie les informations d'utilisateur si besoin
+  
+      // Token valide, on peut renvoyer les informations utilisateur
       return response.status(200).json({ message: "Token valide", user: decoded });
     });
-  }
+  },
 
 }

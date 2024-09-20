@@ -5,7 +5,7 @@
 GET {{endpoint}}/api/users//findUser?email=frewmike59@yahoo.fr
 
 ###
-GET {{endpoint}}/api/users/findUserProfile/2
+GET {{endpoint}}/api/users/findUserProfile/1
 
 ###
 POST {{ endpoint }}/api/users/signup
