@@ -1,16 +1,13 @@
 import * as pdfDatamapper from "../datamappers/pdf.datamapper.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs";
 
 export default {
 
     upload: async (request, response) => {
         const center_id = request.body.center_id;
         const section_id = request.body.section_id;
-
-        console.log('section_id:', request.body.section_id);
-        console.log('center_id:', request.body.center_id);
-        console.log('File:', request.file);
 
         if (!request.file) {
             return response.status(400).json({error: "aucun fichier téléchargé"})
@@ -36,12 +33,10 @@ export default {
 
     download: async (request, response) => {
         const {filename} = request.params;
-        console.log("Demande de téléchargement pour le fichier:", filename);
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
         const filePath = path.join(__dirname, '../../uploads', filename);
 
-        console.log("Chemin complet du fichier:", filePath);
         
         response.download(filePath, error => {
             if (error) {
@@ -49,6 +44,24 @@ export default {
             }
         });
 
+    },
+
+    deletePdf: async (request, response) => {
+        const {fileId} = request.params;
+        const pdf = await pdfDatamapper.findById(fileId);
+        if(!pdf) {
+            return response.status(500).json({error: "Le fichier n'a pas été trouvé."});
+        }
+
+        const filePath = pdf.pdf_url;
+        fs.unlink(path.join(__dirname, '..', filePath), (err) => {
+            if (err){
+                return response.status(500).json({error: "Erreur lors de la suppression du fichier"})
+            }
+        });
+
+        await pdfDatamapper.deleteFile(fileId);
+        return response.status(200).json({message: "Fichier supprimé avec succés"})
     },
 
     getAll: async (request, response) => {
