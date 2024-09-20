@@ -8,8 +8,10 @@ VALUES
 ('SuperAdmin'),
 ('Admin'),
 ('Moderateur'),
-('DSC'),
-('Elus'),
+('DS'),
+('CSE'),
+('CSSCT'),
+('RP'),
 ('Membre'),
 ('Nouvel inscrit');
 

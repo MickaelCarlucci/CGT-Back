@@ -150,6 +150,12 @@ VALUES
 ('Accord d''entreprise'),
 ('Tract'),
 ('CSE'),
-('News');
+('RP'),
+('CSSCT'),
+('News'),
+('privé: CSE'),
+('privé: RP'),
+('privé: CSSCT');
+
 
 COMMIT;

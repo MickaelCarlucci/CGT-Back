@@ -35,9 +35,11 @@ CREATE table "user" (
      "second_question" VARCHAR(60) NOT NULL,
      "second_answer" VARCHAR(50) NOT NULL,
      "center_id" INT NOT NULL REFERENCES "center"("id") DEFAULT 14,
+     "last_activity" TIMESTAMPTZ,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
+
 CREATE table "role" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      "name" VARCHAR(30) NOT NULL UNIQUE,

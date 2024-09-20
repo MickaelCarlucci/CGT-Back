@@ -183,12 +183,20 @@ GROUP BY "user".id;`,
 
   export async function updateActivity(activityId, userId) {
     const query = {
-      text:'UPDATE "user" SET activity_id=$1 WHERE id=$2 RETURNING (activity_id)',
+      text:'UPDATE "user" SET activity_id=$1 WHERE id=$2 RETURNING (activity_id);',
       values: [activityId, userId],
     };
     const result = await client.query(query);
     return result.rows[0];
   }
 
+  export async function updateLastActivity(userId) {
+    const query = {
+      text: `UPDATE "user" SET last_activity = NOW() WHERE id = $1 RETURNING (last_activity);`,
+      values: [userId]
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
 
   

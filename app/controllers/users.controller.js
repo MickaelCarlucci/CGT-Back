@@ -209,7 +209,7 @@ export default {
         return response.status(401).json({ error: "Refresh token manquant" });
     }
 
-    jwt.verify(refreshToken, JWTRefreshSecret, (error, user) => {
+    jwt.verify(refreshToken, JWTRefreshSecret, async (error, user) => {
         if (error) {
             return response.status(403).json({ error: "Refresh token invalide ou expiré" });
         }
@@ -220,6 +220,11 @@ export default {
             pseudo: user.pseudo,
             mail: user.mail,
         }, JWTSecret, { expiresIn: '15m' }); // Nouveau access token de courte durée
+
+        const updatedLastActivity = await userDatamapper.updateLastActivity(user.id);
+        if(!updatedLastActivity) {
+          return response.status(500).json({error: "impossible de mettre à jour la date d'activité"})
+        }
 
         return response.status(200).json({
             accessToken: newAccessToken,
@@ -238,7 +243,7 @@ export default {
     const token = authHeader.split(' ')[1];
 
     if (!token) {
-      return response.status(401).json({ error: "Token manquant" });
+      return response.status(401).json({ error: "Token manquant, merci de vous reconnecter" });
     }
 
     // Vérifier la validité du token
