@@ -104,7 +104,7 @@ export default {
         id: user.id,
         pseudo: user.pseudo,
         mail: user.mail,
-    }, JWTSecret, { expiresIn: '15m' }); // Access token de courte durée (15 minutes par exemple)
+    }, JWTSecret, { expiresIn: '30m' }); // Access token de courte durée (30 minutes par exemple)
 
     // Génération du refresh token
     const refreshToken = jwt.sign({
@@ -228,7 +228,7 @@ export default {
                 mail: user.mail,
             },
             JWTSecret,
-            { expiresIn: '15m' } // Nouveau access token avec une durée de vie de 15 minutes
+            { expiresIn: '30m' } // Nouveau access token avec une durée de vie de 30 minutes
         );
 
         console.log("Nouveau accessToken généré :", newAccessToken);
