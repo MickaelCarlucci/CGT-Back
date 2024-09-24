@@ -2,7 +2,7 @@ import client from "../helpers/pg.client.js";
 
 export async function findAll() {
   const query = {
-    text: 'SELECT * FROM "leaflet_stored"',
+    text: 'SELECT * FROM "leaflet_stored" ORDER BY id DESC;',
   };
   const result = await client.query(query);
   return result.rows;

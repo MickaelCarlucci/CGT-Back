@@ -1,7 +1,7 @@
 import * as pdfDatamapper from "../datamappers/pdf.datamapper.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
+import fs from "fs/promises";
 
 export default {
 
@@ -47,21 +47,31 @@ export default {
     },
 
     deletePdf: async (request, response) => {
-        const {fileId} = request.params;
-        const pdf = await pdfDatamapper.findById(fileId);
-        if(!pdf) {
-            return response.status(500).json({error: "Le fichier n'a pas été trouvé."});
-        }
-
-        const filePath = pdf.pdf_url;
-        fs.unlink(path.join(__dirname, '..', filePath), (err) => {
-            if (err){
-                return response.status(500).json({error: "Erreur lors de la suppression du fichier"})
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
+        try {
+            const { fileId } = request.params;
+            const pdf = await pdfDatamapper.findById(fileId);
+    
+            if (!pdf) {
+                return response.status(404).json({ error: "Le fichier n'a pas été trouvé." });
             }
-        });
-
-        await pdfDatamapper.deleteFile(fileId);
-        return response.status(200).json({message: "Fichier supprimé avec succés"})
+    
+            const filePath = pdf.pdf_url;
+    
+            // Supprimer le fichier
+            await fs.unlink(path.join(__dirname, '..', '..', filePath));
+    
+            // Supprimer l'entrée dans la base de données
+            await pdfDatamapper.deleteFile(fileId);
+    
+            // Envoyer la réponse après avoir terminé toutes les actions
+            return response.status(200).json({ message: "Fichier supprimé avec succès" });
+        } catch (err) {
+            // Gérer les erreurs et envoyer une réponse appropriée
+            console.error(err);
+            return response.status(500).json({ error: "Erreur lors de la suppression du fichier" });
+        }
     },
 
     getAll: async (request, response) => {
