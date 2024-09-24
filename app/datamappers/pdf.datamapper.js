@@ -2,7 +2,7 @@ import client from "../helpers/pg.client.js";
 
 export async function findAll() {
   const query = {
-    text: 'SELECT * FROM "leaflet_stored"',
+    text: 'SELECT * FROM "leaflet_stored" ORDER BY id DESC;',
   };
   const result = await client.query(query);
   return result.rows;
@@ -57,4 +57,14 @@ export async function findAllPdfByCenter(center_id) {
   };
   const result = await client.query(query);
   return result.rows;
+}
+
+export async function deleteFile(fileId) {
+  const query = {
+    text: `DELETE FROM "leaflet_stored"
+          WHERE id = $1;`,
+    values:[fileId]
+  }
+  const result = await client.query(query);
+  return result.rows[0]
 }

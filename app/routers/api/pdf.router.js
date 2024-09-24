@@ -23,9 +23,10 @@ const storage = multer.diskStorage({
   // route pdf
   router.route('/upload').post(jwtExpirationVerification, upload.single('file'), controllerWrapper(pdfController.upload));//!
   router.route('/download/:filename').get(controllerWrapper(pdfController.download));//!
-  router.route('/views').get(controllerWrapper(pdfController.getAll));
+  router.route('/views').get(controllerWrapper(pdfController.getAll));//!
   router.route('/last').get(controllerWrapper(pdfController.getLastTract)); //!
   router.route('/views/:sectionId(\\d+)').get(controllerWrapper(pdfController.getDocumentsBySection));//!
+  router.route('/delete/:fileId(\\d+)').delete(jwtExpirationVerification, controllerWrapper(pdfController.deletePdf));//!
 
 
 
