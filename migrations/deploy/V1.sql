@@ -34,11 +34,13 @@ CREATE table "user" (
      "first_answer" VARCHAR(50) NOT NULL,
      "second_question" VARCHAR(60) NOT NULL,
      "second_answer" VARCHAR(50) NOT NULL,
-     "center_id" INT NOT NULL REFERENCES "center"("id") DEFAULT 14,
+     "center_id" INT NOT NULL REFERENCES "center"("id") ON DELETE SET DEFAULT,
      "last_activity" TIMESTAMPTZ DEFAULT now(),
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
+
+ALTER TABLE "user" ALTER COLUMN "center_id" SET DEFAULT 14;
 
 CREATE table "role" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -67,8 +69,8 @@ CREATE table "information" (
      "title" VARCHAR(100) NOT NULL,
      "contain" TEXT,
      "image_url" TEXT,
-     "user_id" INT NOT NULL REFERENCES "user"("id"),
-     "section_id" INT NOT NULL REFERENCES "section"("id"),
+     "user_id" INT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
+     "section_id" INT NOT NULL REFERENCES "section"("id") ON DELETE CASCADE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );
@@ -78,8 +80,8 @@ CREATE table "leaflet_stored" (
      "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      "title" VARCHAR(200) NOT NULL,
      "pdf_url" VARCHAR(200) NOT NULL,
-     "section_id" INT NOT NULL REFERENCES "section"("id"),
-     "center_id" INT NOT NULL REFERENCES "center"("id"),
+     "section_id" INT NOT NULL REFERENCES "section"("id") ON DELETE CASCADE,
+     "center_id" INT NOT NULL REFERENCES "center"("id") ON DELETE CASCADE,
      "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
      "updated_at" TIMESTAMPTZ
 );

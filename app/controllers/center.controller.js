@@ -81,15 +81,9 @@ export default {
     },
 
     unlickActivityAndCenter: async (request, response) => {
-        const {centerId} = request.params;
-        const {activityId} = request.body;
+        const {centerId, activityId} = request.params;
 
         const unlinkedActivity = await CenterHasActivityDataMapper.unlinkCenterFromActivity(centerId, activityId)
-        if(!unlinkedActivity) {
-            return response
-            .status(500)
-            .json({error: "Une erreur est survenue pendant l'opération"})
-        }
         return response.status(200).send(unlinkedActivity)
     },
 

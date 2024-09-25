@@ -57,10 +57,12 @@ export default {
         // Lier l'activité au centre sélectionné
         const linkActivityToCenter = await CenterHasActivityDataMapper.linkCenterWithActivity(centerId, activityId);
         if (!linkActivityToCenter) {
+            await client.query('ROLLBACK');
             return response
                 .status(500)
                 .json({ error: "Une erreur est survenue lors de la liaison de l'activité au centre" });
         }
+        await client.query('COMMIT');
         return response.status(200).send({ activity: activityAdded, link: linkActivityToCenter });
     },
 

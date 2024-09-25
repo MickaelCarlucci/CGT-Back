@@ -16,7 +16,7 @@ VALUES
 ('Montigny'),
 ('Montpellier'),
 ('Belfort'),
-('Pas de centre'),
+('Aucun centre'),
 ('Tous les centres');
 
 INSERT INTO "activity" ("name")
