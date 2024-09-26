@@ -35,4 +35,16 @@ router.route('/latest')//!
 router.route('/delete/:newsId(\\d+)')//!
   .delete(jwtExpirationVerification, controllerWrapper(infoController.deleteInformation));
 
+//Route pour trouver une news
+router.route('/news/:newsId(\\d+)')
+  .get(controllerWrapper(infoController.getOneNews));//!
+
+//Route pour modifier un titre
+router.route('/news/:newsId(\\d+)/updateTitle')
+  .patch(jwtExpirationVerification, controllerWrapper(infoController.updateTitleNews));//!
+
+//Route pour modifier un contenu
+router.route('/news/:newsId(\\d+)/updateContain')
+  .patch(jwtExpirationVerification, controllerWrapper(infoController.updateContainNews));//!
+
 export default router;
