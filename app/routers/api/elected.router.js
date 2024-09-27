@@ -6,7 +6,7 @@ import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
 const router = Router();
 
 router.route('/appointment').get(controllerWrapper(electedController.getAppointment));
-router.route('/appointment/update').patch( controllerWrapper(electedController.updateAppointment));
+router.route('/appointment/update').patch(jwtExpirationVerification, controllerWrapper(electedController.updateAppointment));
 
 
 export default router;
