@@ -10,8 +10,8 @@ export default {
     },
 
     updateAppointment: async (request, response) => {
-        const { subject, date, link } = request.body;
-        const appointmentUpdated = await appointmentDatamapper.update(subject, date, link);
+        const { subject, date, linkMeeting } = request.body;
+        const appointmentUpdated = await appointmentDatamapper.update(subject, date, linkMeeting);
         if (!appointmentUpdated) {
             return response.status(500).json({error: "Impossible de modifier le rendez-vous"})
         }
