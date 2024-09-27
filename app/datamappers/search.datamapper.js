@@ -6,7 +6,8 @@ export async function findUsersByRoles() {
 FROM "role"
 JOIN "user_has_role" ON "role".id = "user_has_role".role_id
 JOIN "user" ON "user_has_role".user_id = "user".id
-WHERE "role".id != 1;`,
+WHERE "role".id != 1
+ORDER BY "user".lastname ASC;`,
   };
   const result = await client.query(query);
   return result.rows;
@@ -19,7 +20,8 @@ export async function findUsersByCenter(centerId) {
            JOIN "user_has_role" ON "user".id = "user_has_role".user_id
            JOIN "role" ON "user_has_role".role_id = "role".id
            WHERE "center".id = $1
-           AND "role".id != 1`,
+           AND "role".id != 1
+           ORDER BY "user".lastname ASC;`,
     values: [centerId],
   };
   const result = await client.query(query);
@@ -37,7 +39,8 @@ export async function findUsersByCenterByActivity(centerId, activityId) {
              WHERE "center".id = $1
              AND "activity".id = $2
              AND "user".activity_id = $2
-             AND "role".id != 1`,
+             AND "role".id != 1
+             ORDER BY "user".lastname ASC;`,
       values: [centerId, activityId],
     };
     const result = await client.query(query);

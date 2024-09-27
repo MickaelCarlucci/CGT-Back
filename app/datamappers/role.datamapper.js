@@ -54,7 +54,8 @@ export async function findElected() {
     text: `SELECT "user".id, "user".lastname, "user".firstname, "user".phone, "user".mail, "user".center_id FROM "user"
           JOIN "user_has_role" ON "user".id = "user_has_role".user_id
           JOIN "role" ON "user_has_role".role_id = "role".id
-          WHERE "role".id = 5;`,
+          WHERE "role".id = 5
+          ORDER BY "user".lastname ASC;`,
   }
   const result = await client.query(query);
   return result.rows;
@@ -66,7 +67,8 @@ export async function findElectedByCenter(centerId) {
           JOIN "user_has_role" ON "user".id = "user_has_role".user_id
           JOIN "role" ON "user_has_role".role_id = "role".id
           WHERE "role".id = 5
-          AND "user".center_id = $1;`,
+          AND "user".center_id = $1;
+          ORDER BY "user".lastname ASC;`,
     values: [centerId]
   }
   const result = await client.query(query);

@@ -6,7 +6,7 @@ constructor(client, tablename) {
 
 async findAll() {
     const query = {
-        text: `SELECT * FROM "${this.tablename}"`
+        text: `SELECT * FROM "${this.tablename}" ORDER BY name ASC`
     };
     const result = await this.client.query(query);
     return result.rows;

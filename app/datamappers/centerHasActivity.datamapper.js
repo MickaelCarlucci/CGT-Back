@@ -22,7 +22,8 @@ export async function findActivitiesByCenterId(centerId) {
     const query = {
         text: `SELECT activity.* FROM "activity" 
                JOIN "center_has_activity" ON activity.id = center_has_activity.activity_id
-               WHERE center_has_activity.center_id = $1`,
+               WHERE center_has_activity.center_id = $1
+               ORDER BY name ASC`,
         values: [centerId]
     };
     const result = await client.query(query);
