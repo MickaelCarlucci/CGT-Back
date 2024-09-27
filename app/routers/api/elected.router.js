@@ -1,5 +1,5 @@
 import { Router } from "express";
-import electedController from "../../controllers/elected.controller";
+import electedController from "../../controllers/elected.controller.js";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
 import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
 
