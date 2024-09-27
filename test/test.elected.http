@@ -1,0 +1,14 @@
+@endpoint=http://localhost:{{$dotenv PORT}}
+
+###
+GET {{endpoint}}/api/elected/appointment
+
+###
+PATCH {{endpoint}}/api/elected/appointment/update
+Content-Type: application/json
+
+{
+    "subject": "première réunion",
+    "date": "Le vendredi 35 juilaout",
+    "link": "http://jkdpsqdipzqj4564896"
+}
