@@ -30,3 +30,6 @@ GET {{endpoint}}/api/admin/elected
 
 ###
 GET {{endpoint}}/api/admin/elected/2
+
+###
+GET {{endpoint}}/api/admin/electedRole/5

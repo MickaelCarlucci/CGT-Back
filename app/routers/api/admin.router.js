@@ -40,6 +40,7 @@ router.route('/sections').get(controllerWrapper(sectionController.getAllSection)
 //contact routes
 router.route('/elected').get(controllerWrapper(roleController.getElected));//!
 router.route('/elected/:centerId(\\d+)').get(controllerWrapper(roleController.getElectedByCenter));//!
+router.route('/electedRole/:roleId(\\d+)').get(controllerWrapper(roleController.getElectedByRole));//!
 
 
 export default router;

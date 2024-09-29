@@ -76,6 +76,15 @@ export default {
             return response.status(500).json({error: "Impossible de chargé la liste des élus."})
         }
         return response.status(200).send(elected);
+    },
+
+    getElectedByRole: async (request, response) => {
+        const {roleId} = request.params;
+        const elected = await roleDatamapper.findElectedByRole(roleId);
+        if (!elected) {
+            return response.status(500).json({error: "Impossible de chargé la liste des élus."})
+        }
+        return response.status(200).send(elected);
     }
     
 }
