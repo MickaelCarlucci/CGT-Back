@@ -155,7 +155,8 @@ VALUES
 ('News'),
 ('privé: CSE'),
 ('privé: RP'),
-('privé: CSSCT');
+('privé: CSSCT'),
+('Documents utiles');
 
 
 COMMIT;
