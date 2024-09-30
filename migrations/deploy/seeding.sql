@@ -156,7 +156,8 @@ VALUES
 ('privé: CSE'),
 ('privé: RP'),
 ('privé: CSSCT'),
-('Documents utiles');
+('Documents utiles'),
+('Le saviez-vous ?');
 
 
 COMMIT;

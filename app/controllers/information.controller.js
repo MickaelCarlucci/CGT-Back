@@ -78,10 +78,18 @@ export default {
         return response.status(200).send(information);
     },
 
-    LastInformations: async (request, response) => {
+    LastNews: async (request, response) => {
         const information = await infoDatamapper.TenLastNews();
         if (!information) {
             return response.status(500).json({error: "les news n'ont pas pu être trouvé"})
+        }
+        return response.status(200).send(information);
+    },
+
+    LastDidYouKnow: async (request, response) => {
+        const information = await infoDatamapper.TenLastDidYouKnow();
+        if (!information) {
+            return response.status(500).json({error: "les 'le saviez-vous' n'ont pas pu être trouvé"})
         }
         return response.status(200).send(information);
     },

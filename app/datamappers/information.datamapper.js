@@ -48,7 +48,16 @@ export async function lastNews() {
 
 export async function TenLastNews() {
     const query = {
-        text: `SELECT * FROM "information"
+        text: `SELECT * FROM "information" WHERE section_id = 6
+                ORDER BY created_at DESC LIMIT 10`
+    }
+    const response = await client.query(query);
+    return response.rows;
+}
+
+export async function TenLastDidYouKnow() {
+    const query = {
+        text: `SELECT * FROM "information" WHERE section_id = 11
                 ORDER BY created_at DESC LIMIT 10`
     }
     const response = await client.query(query);

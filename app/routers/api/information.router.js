@@ -27,9 +27,13 @@ router.route('/news/:userId(\\d+)')//!
 router.route('/news')//!
   .get(controllerWrapper(infoController.recentInformation));
 
-// Route pour obtenir les dernières informations
-router.route('/latest')//!
-  .get(controllerWrapper(infoController.LastInformations));
+// Route pour obtenir les dernières news
+router.route('/latestNews')//!
+  .get(controllerWrapper(infoController.LastNews));
+
+  // Route pour obtenir les dernière "le saviez-vous ?"
+router.route('/latestDidYouKnow')//!
+.get(controllerWrapper(infoController.LastDidYouKnow));
 
 //Route pour supprimer une information
 router.route('/delete/:newsId(\\d+)')//!
