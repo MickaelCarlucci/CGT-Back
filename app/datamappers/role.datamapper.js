@@ -59,12 +59,12 @@ export async function findElected() {
     "user".mail, 
     "user".center_id, 
     "center".name AS center_name, 
-    STRING_AGG("role".name, ', ') AS roles -- Concatène les rôles en une seule chaîne séparée par des virgules
+    STRING_AGG("role".name, ', ' ORDER BY "role".name) FILTER (WHERE "role".id IN (4, 5, 6, 7)) AS roles
 FROM "user"
 JOIN "user_has_role" ON "user".id = "user_has_role".user_id
 JOIN "role" ON "user_has_role".role_id = "role".id
 JOIN "center" ON "user".center_id = "center".id
-WHERE "role".id IN (4, 5, 6, 7)
+WHERE "role".id IN (4, 5, 6, 7) -- Filtrer les utilisateurs ayant ces rôles
 GROUP BY 
     "user".id, 
     "user".lastname, 
@@ -75,7 +75,7 @@ GROUP BY
     "center".name
 ORDER BY "user".lastname ASC;
 `,
-  }
+  };
   const result = await client.query(query);
   return result.rows;
 }
@@ -107,8 +107,8 @@ GROUP BY
     "center".name
 ORDER BY "user".lastname ASC;
 `,
-    values: [centerId]
-  }
+    values: [centerId],
+  };
   const result = await client.query(query);
   return result.rows;
 }
@@ -145,10 +145,8 @@ GROUP BY
 ORDER BY "user".lastname ASC;
 
 `,
-    values: [roleId]
-  }
+    values: [roleId],
+  };
   const result = await client.query(query);
   return result.rows;
 }
-
-
