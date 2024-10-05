@@ -38,12 +38,37 @@ export async function updateContain(contain, id) {
 
 export async function lastNews() {
     const query = {
-        text: `SELECT * FROM "information"
-        ORDER BY created_at DESC
-        LIMIT 1;`
+        text: `(
+  SELECT 
+    'information' AS source,
+    id,
+    title,
+    contain,
+    image_url,
+    NULL AS pdf_url,
+    section_id,
+    created_at
+  FROM information
+)
+UNION
+(
+  SELECT
+    'leaflet_stored' AS source,
+    id,
+    title,
+    NULL AS contain,
+    NULL AS image_url,
+    pdf_url,
+    section_id,
+    created_at
+  FROM leaflet_stored
+	WHERE section_id = 2
+)
+ORDER BY created_at DESC
+LIMIT 3;`
     }
     const result = await client.query(query);
-    return result.rows[0];
+    return result.rows;
 }
 
 export async function TenLastNews() {

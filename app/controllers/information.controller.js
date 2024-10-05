@@ -73,7 +73,7 @@ export default {
     recentInformation: async (__, response) => {
         const information = await infoDatamapper.lastNews();
         if(!information) {
-            return response.status(500).json({error: "La dernière n'a pas pu être trouvé"})
+            return response.status(500).json({error: "Les trois dernières n'ont pas pu être trouvé"})
         }
         return response.status(200).send(information);
     },

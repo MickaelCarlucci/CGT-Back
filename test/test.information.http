@@ -14,7 +14,10 @@ Content-Type: application/json
 GET {{endpoint}}/api/information/news
 
 ###
-GET {{endpoint}}/api/information/latest
+GET {{endpoint}}/api/information/latestNews
+
+###
+GET {{endpoint}}/api/information/latestDidYouKnow
 
 ###
 DELETE {{endpoint}}/api/information/delete/2
