@@ -51,10 +51,11 @@ GROUP BY "user".id;`,
     encryptedAnswer1,
     secondQuestion,
     encryptedAnswer2,
-    centerId
+    centerId,
+    activityId
 ) {
     const query = {
-        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id, pseudo, mail, created_at;',
+        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id", "activity_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id, pseudo, mail, created_at;',
         values: [
           pseudo,
           firstname,
@@ -65,7 +66,8 @@ GROUP BY "user".id;`,
           encryptedAnswer1,
           secondQuestion,
           encryptedAnswer2,
-          centerId
+          centerId,
+          activityId
         ],
     };
     const result = await client.query(query);

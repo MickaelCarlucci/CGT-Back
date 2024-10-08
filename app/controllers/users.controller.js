@@ -23,7 +23,8 @@ export default {
         firstAnswer,
         secondQuestion,
         secondAnswer,
-        centerId
+        centerId,
+        activityId
     } = request.body;
 
     // On convertit l'email en minuscule
@@ -57,7 +58,8 @@ export default {
         encryptedAnswer1,
         secondQuestion,
         encryptedAnswer2,
-        centerId
+        centerId,
+        activityId
     );
 
     if (!user) {
