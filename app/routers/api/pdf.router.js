@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import pdfController from "../../controllers/pdf.controller.js";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
-import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
+import firebaseAuthMiddleware from "../../helpers/firebaseAuthMiddleware.js";
 
 const router = Router();
 
@@ -21,12 +21,12 @@ const storage = multer.diskStorage({
   const upload = multer({ storage });
 
   // route pdf
-  router.route('/upload').post(jwtExpirationVerification, upload.single('file'), controllerWrapper(pdfController.upload));//!
+  router.route('/upload').post(firebaseAuthMiddleware, upload.single('file'), controllerWrapper(pdfController.upload));//!
   router.route('/download/:filename').get(controllerWrapper(pdfController.download));//!
   router.route('/views').get(controllerWrapper(pdfController.getAll));//!
   router.route('/last').get(controllerWrapper(pdfController.getLastTract)); //!
   router.route('/views/:sectionId(\\d+)').get(controllerWrapper(pdfController.getDocumentsBySection));//!
-  router.route('/delete/:fileId(\\d+)').delete(jwtExpirationVerification, controllerWrapper(pdfController.deletePdf));//!
+  router.route('/delete/:fileId(\\d+)').delete(firebaseAuthMiddleware, controllerWrapper(pdfController.deletePdf));//!
 
 
 

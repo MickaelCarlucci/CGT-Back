@@ -1,7 +1,7 @@
 import { Router } from "express";
 import infoController from "../../controllers/information.controller.js";
 import controllerWrapper from "../../helpers/controllerWrapper.js";
-import jwtExpirationVerification from "../../helpers/jwtVerifyToken.js";
+import firebaseAuthMiddleware from "../../helpers/firebaseAuthMiddleware.js";
 import multer from "multer";  // Utilisation d'import pour multer
 import path from "path";
 
@@ -21,7 +21,7 @@ const router = Router();
 
 // Route pour créer une nouvelle information avec un fichier image
 router.route('/news/:userId(\\d+)')//!
-  .post(jwtExpirationVerification, upload.single('image'), controllerWrapper(infoController.newInformation));
+  .post(firebaseAuthMiddleware, upload.single('image'), controllerWrapper(infoController.newInformation));
 
 // Route pour la dernière nouvelle crée
 router.route('/news')//!
@@ -37,7 +37,7 @@ router.route('/latestDidYouKnow')//!
 
 //Route pour supprimer une information
 router.route('/delete/:newsId(\\d+)')//!
-  .delete(jwtExpirationVerification, controllerWrapper(infoController.deleteInformation));
+  .delete(firebaseAuthMiddleware, controllerWrapper(infoController.deleteInformation));
 
 //Route pour trouver une news
 router.route('/news/:newsId(\\d+)')
@@ -45,10 +45,10 @@ router.route('/news/:newsId(\\d+)')
 
 //Route pour modifier un titre
 router.route('/news/:newsId(\\d+)/updateTitle')
-  .patch(jwtExpirationVerification, controllerWrapper(infoController.updateTitleNews));//!
+  .patch(firebaseAuthMiddleware, controllerWrapper(infoController.updateTitleNews));//!
 
 //Route pour modifier un contenu
 router.route('/news/:newsId(\\d+)/updateContain')
-  .patch(jwtExpirationVerification, controllerWrapper(infoController.updateContainNews));//!
+  .patch(firebaseAuthMiddleware, controllerWrapper(infoController.updateContainNews));//!
 
 export default router;
