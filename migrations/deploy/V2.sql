@@ -2,7 +2,6 @@
 
 BEGIN;
 
-ALTER TABLE "user" ALTER COLUMN "password" TYPE TEXT;
 ALTER TABLE "user" ALTER COLUMN "first_answer" TYPE TEXT;
 ALTER TABLE "user" ALTER COLUMN "second_answer" TYPE TEXT;
 

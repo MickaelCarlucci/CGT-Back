@@ -14,3 +14,5 @@ phone_column 2024-08-31T15:23:56Z Mickael Carlucci <frewm@Hamid> # Add a column 
 poll_table 2024-09-11T06:33:08Z Mickael Carlucci <frewm@Hamid> # add a new table for poll
 table_vote 2024-09-13T15:30:16Z Mickael Carlucci <frewm@Hamid> # add table for check vote by user
 V5 2024-09-27T09:43:49Z Mickael Carlucci <frewm@Hamid> # add new table for manage appointments
+V6 2024-10-16T18:16:51Z Mickael Carlucci <frewm@Hamid> # add versionning with delete table useless
+V6.1 2024-10-18T09:13:33Z Mickael Carlucci <frewm@Hamid> # delete column questions for user Table

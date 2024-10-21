@@ -141,10 +141,6 @@ VALUES
 (13, 1),
 (13, 47);
 
-INSERT INTO "user"("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer")
-VALUES
-('Mike', 'Mickael', 'Carlucci', 'frewmike59@yahoo.fr', '$2b$12$hRKEUHPmFymJPUufrK2D1OSRHN67t.H6BUdRPJmpGA0ZAoXO98zIW', 'provisoire', 'provisoire', 'provisoire', 'provisoire');
-
 INSERT INTO "section"("name")
 VALUES
 ('Accord d''entreprise'),

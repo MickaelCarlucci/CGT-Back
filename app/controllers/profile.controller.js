@@ -1,8 +1,4 @@
-import bcrypt from "bcrypt";
 import * as userDatamapper from "../datamappers/users.datamapper.js";
-
-
-const saltRounds = process.env.SALT_ROUNDS;
 
 export default {
     findOneUserByMail: async (request, response) => {
@@ -75,37 +71,6 @@ export default {
     return response.status(200).send(lastnameUpdated);
 },
 
-    passwordModification: async(request, response) => {
-        const { userId } = request.params;
-        const { password, oldPassword } = request.body;
-
-        const user = await userDatamapper.findUserById(userId);
-        if (!user) {
-          return response.status(403).json({ error: "Utilisateur introuvable" });
-        }
-        const mail = user.mail;
-      
-        const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
-        if (!isPasswordValid) {
-          return response.status(403).json({ error: "L'ancien mot de passe est incorrect" });
-        }
-      
-        const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
-      
-        const encryptedNewPassword = await bcrypt.hash(password, salt);
-      
-        const comparedPassword = await bcrypt.compare(encryptedNewPassword, oldPassword);
-        if (comparedPassword) {
-          return response.status(403).json({ error: "Le nouveau mot de passe ne peut pas être identique à votre ancien mot de passe" });
-        }
-      
-        const NewPassword = await userDatamapper.updateUserPassword(mail, encryptedNewPassword);
-        if (!NewPassword) {
-          return response.status(500).json({error: "Problème avec le server"})
-        }
-        return response.status(200).json({ mail });
-    },
-
     mailModification: async(request, response) => {
         const { userId } = request.params;
 
@@ -129,32 +94,6 @@ export default {
         return response.status(200).send(emailUpdated);
     },
 
-    firstQuestionAndAnswerModification: async(request, response) => {
-      const { userId } = request.params;
-
-      const newFirstQuestion = request.body.first_question;
-      const newFirstAnswer = request.body.first_answer;
-    
-      const user = await userDatamapper.findUserById(userId);
-      if (!user) {
-        return response.status(403).json({ error: "utilisateur introuvable" });
-      }
-    
-      const questionUpdated = await userDatamapper.updateFirstQuestion(newFirstQuestion, userId);
-      if (!questionUpdated) {
-        return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre question" });
-      }
-
-      const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
-      const encryptedAnswer = await bcrypt.hash(newFirstAnswer, salt)
-      
-      const answerUpdated = await userDatamapper.updateFirstAnswer(encryptedAnswer, userId);
-      if (!answerUpdated) {
-        return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre réponse" });
-      }
-      
-      return response.status(200).send(questionUpdated);
-  },
 
   phoneModification: async(request, response) => {
     const { userId } = request.params;
@@ -172,35 +111,6 @@ export default {
     }
 
     return response.status(200).send(phoneUpdated);
-},
-
-  secondQuestionAndAnswerModification: async(request, response) => {
-    const { userId } = request.params;
-
-    const newSecondQuestion = request.body.second_question;
-    const newSecondAnswer = request.body.second_answer;
-
-  
-    const user = await userDatamapper.findUserById(userId);
-    if (!user) {
-      return response.status(403).json({ error: "utilisateur introuvable" });
-    }
-  
-    const questionUpdated = await userDatamapper.updateSecondQuestion(newSecondQuestion, userId);
-    if (!questionUpdated) {
-      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre question" });
-    }
-
-    const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
-    const encryptedAnswer = await bcrypt.hash(newSecondAnswer, salt)
-    console.log(encryptedAnswer);
-    
-    const answerUpdated = await userDatamapper.updateSecondAnswer(encryptedAnswer, userId);
-    console.log(answerUpdated);
-    if (!answerUpdated) {
-      return response.status(500).json({ error: "Une erreur est survenue lors de la mise à jour de votre réponse" });
-    }
-    return response.status(200).send(questionUpdated);
 },
 
   ModificationUserCenter: async(request,response) => {

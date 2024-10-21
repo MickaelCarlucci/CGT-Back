@@ -1,4 +1,4 @@
-import admin from '../config/app-cgt-teleperformance-firebase-adminsdk-nqds4-50a6b6d042.json'; // Firebase Admin SDK importé
+import admin from '../../firebaseAdmin.js'; // Firebase Admin SDK importé
 
 const firebaseAuthMiddleware = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
@@ -24,6 +24,7 @@ const firebaseAuthMiddleware = async (req, res, next) => {
     // Passer à la prochaine middleware ou route
     next();
   } catch (error) {
+    console.error(error);
     return res.status(401).json({ error: "Token invalide ou expiré" });
   }
 };

@@ -2,9 +2,6 @@
 
 BEGIN;
 
-ALTER TABLE "user" ALTER COLUMN "password" TYPE VARCHAR(50);
-ALTER TABLE "user" ALTER COLUMN "password" SET NOT NULL;
-
 ALTER TABLE "user" ALTER COLUMN "first_answer" TYPE VARCHAR(50);
 ALTER TABLE "user" ALTER COLUMN "first_answer" SET NOT NULL;
 

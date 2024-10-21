@@ -32,6 +32,20 @@ GROUP BY "user".id;`,
     return result.rows[0];
   }
 
+  export async function findByFirebaseUID(UID) {
+    const query = {
+      text: `SELECT "user".*, string_agg("role".name, ', ') AS roles 
+FROM "user"
+JOIN "user_has_role" ON "user".id = "user_has_role".user_id
+JOIN "role" ON "user_has_role".role_id = "role".id
+WHERE "user".firebaseUID = $1
+GROUP BY "user".id;`,
+      values: [UID],
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
   export async function checkUsersInformations(pseudo, mail) {
     const query = {
       text: 'SELECT "pseudo" FROM "user" WHERE pseudo=$1 OR mail=$2',
@@ -46,32 +60,31 @@ GROUP BY "user".id;`,
     firstname,
     lastname,
     mail,
-    encryptedPassword,
-    firstQuestion,
-    encryptedAnswer1,
-    secondQuestion,
-    encryptedAnswer2,
+    firebaseUID,
     centerId,
     activityId
 ) {
     const query = {
-        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "password", "first_question", "first_answer", "second_question", "second_answer", "center_id", "activity_id") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id, pseudo, mail, created_at;',
+        text: 'INSERT INTO "user" ("pseudo", "firstname", "lastname", "mail", "firebaseUID", "center_id", "activity_id") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, pseudo, mail, created_at;',
         values: [
           pseudo,
           firstname,
           lastname,
           mail,
-          encryptedPassword,
-          firstQuestion,
-          encryptedAnswer1,
-          secondQuestion,
-          encryptedAnswer2,
+          firebaseUID,
           centerId,
           activityId
         ],
     };
-    const result = await client.query(query);
-    return result.rows[0];
+    try {
+      const result = await client.query(query);
+      return result.rows[0];
+    } catch (error) {
+      console.error('Détails de l\'erreur lors de l\'insertion :', error.message);
+      console.error('Requête exécutée :', query.text);
+      console.error('Valeurs :', query.values);
+      throw error;
+    }
   }
 
   export async function deleteUser(mail) {
@@ -196,6 +209,15 @@ GROUP BY "user".id;`,
     const query = {
       text: `UPDATE "user" SET last_activity = NOW() WHERE id = $1 RETURNING (last_activity);`,
       values: [userId]
+    };
+    const result = await client.query(query);
+    return result.rows[0];
+  }
+
+  export async function updateEmailVerifiedStatus(isVerified, firebaseUID) {
+    const query = {
+      text: `UPDATE "user" SET emailVerified = $1 WHERE firebaseUID = $2 RETURNING (mail);`,
+      values: [isVerified, firebaseUID]
     };
     const result = await client.query(query);
     return result.rows[0];

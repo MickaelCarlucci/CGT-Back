@@ -1,24 +1,15 @@
-import bcrypt from "bcrypt";
 import admin from "../../firebaseAdmin.js"; // Firebase Admin SDK importé
 import * as userDatamapper from "../datamappers/users.datamapper.js";
 import * as roleDatamapper from "../datamappers/role.datamapper.js";
 
-const saltRounds = process.env.SALT_ROUNDS;
-
 export default {
   signup: async (request, response) => {
-    delete request.body.passwordConfirm; // on supprime le passwordConfirm
-
     const {
       pseudo,
       firstname,
       lastname,
       mail,
-      password,
-      firstQuestion,
-      firstAnswer,
-      secondQuestion,
-      secondAnswer,
+      firebaseUID,
       centerId,
       activityId
     } = request.body;
@@ -35,71 +26,100 @@ export default {
       return response.status(401).json({ error: "L'utilisateur ou l'email existe déjà" });
     }
 
-    // Chiffrement du mot de passe et des réponses aux questions secrètes
-    const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
-    const encryptedPassword = await bcrypt.hash(password, salt);
-    const encryptedAnswer1 = await bcrypt.hash(firstAnswer, salt);
-    const encryptedAnswer2 = await bcrypt.hash(secondAnswer, salt);
-
-    // Créer l'utilisateur dans la base de données
-    const user = await userDatamapper.createUser(
+    // Ajout d'un log pour vérifier les valeurs avant l'insertion
+    console.log("Données utilisateur avant création : ", {
       pseudo,
       firstname,
       lastname,
-      normalizedMail,
-      encryptedPassword,
-      firstQuestion,
-      encryptedAnswer1,
-      secondQuestion,
-      encryptedAnswer2,
+      mail: normalizedMail,
+      firebaseUID,
       centerId,
-      activityId
-    );
+      activityId,
+      emailVerified: false
+    });
 
-    if (!user) {
-      return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement" });
+    try {
+      // Créer l'utilisateur avec emailVerified = false par défaut
+      const user = await userDatamapper.createUser(
+        pseudo,
+        firstname,
+        lastname,
+        normalizedMail,
+        firebaseUID,
+        centerId,
+        activityId,
+      );
+
+      if (!user) {
+        return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement" });
+      }
+
+      return response.status(200).json({ message: "Utilisateur créé, veuillez vérifier votre email." });
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur :", error);
+      return response.status(500).json({ error: "Erreur interne du serveur" });
     }
+},
 
-    // Lier l'utilisateur à un rôle
-    const roleNewUser = await roleDatamapper.linkUserWithRole("9", user.id);
-    if (!roleNewUser) {
-      return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement du rôle" });
-    }
 
-    return response.status(200).send(user);
-  },
+verifyEmailAndAssignRole: async (request, response) => {
+  const { firebaseUID } = request.body; // Recevoir l'UID de l'utilisateur depuis le frontend
 
-  signIn: async (request, response) => {
-    const { mail, password } = request.body;
-    const normalizedMail = mail.toLowerCase();
+      // Récupérer l'utilisateur depuis Firebase
+      const userRecord = await admin.auth().getUser(firebaseUID);
 
-    // Vérifier si l'utilisateur existe
-    const user = await userDatamapper.findUserByEmail(normalizedMail);
+      // Vérifier si l'utilisateur a vérifié son e-mail
+      if (userRecord.emailVerified) {
+          // Mettre à jour l'utilisateur dans la base de données (emailVerified = true)
+          const updatedUser = await userDatamapper.updateEmailVerifiedStatus(true, firebaseUID);
+
+          if (!updatedUser) {
+              return response.status(500).json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
+          }
+
+          // Maintenant que l'e-mail est vérifié, attribuer un rôle à l'utilisateur
+          const roleNewUser = await roleDatamapper.linkUserWithRole("8", updatedUser.id);
+          if (!roleNewUser) {
+              return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement du rôle" });
+          }
+
+          return response.status(200).json({ message: "Email vérifié et rôle attribué avec succès." });
+      } else {
+          return response.status(400).json({ error: "L'e-mail n'a pas encore été vérifié." });
+      }
+},
+
+signIn: async (request, response) => {
+  const { token } = request.body; // Le token JWT envoyé depuis le frontend
+
+  try {
+    // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const firebaseUID = decodedToken.uid;
+
+    // Vérifier si l'utilisateur existe dans la base de données
+    const user = await userDatamapper.findByFirebaseUID(firebaseUID);
     if (!user) {
       return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
 
-    // Vérifier le mot de passe
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
-    }
-
-    // Optionnel : ici, vous pouvez générer une session côté client avec Firebase.
-    // L'application frontend va gérer la connexion via Firebase Auth côté client.
-    
     // Mettre à jour la dernière activité de l'utilisateur
     const updatedLastActivity = await userDatamapper.updateLastActivity(user.id);
     if (!updatedLastActivity) {
       return response.status(500).json({ error: "Impossible de modifier la date d'activité" });
     }
 
-    // Ne plus renvoyer les tokens ici, Firebase gère ça côté frontend
+    // Renvoyer les informations de l'utilisateur (vous pouvez personnaliser ces informations)
     return response.status(200).json({
       message: "Connexion réussie",
-      user
+      user, // Vous pouvez filtrer les données pour ne renvoyer que les informations nécessaires
     });
-  },
+  } catch (error) {
+    console.error("Erreur lors de la vérification du token Firebase:", error);
+    return response.status(401).json({ error: "Token invalide ou expiré" });
+  }
+},
+
 
   deleteUserAccount: async (request, response) => {
     const { userId } = request.params;
@@ -122,76 +142,47 @@ export default {
     return response.status(200).send(deletedUser);
   },
 
-  passwordReset: async (request, response) => {
-    const { mail, answer1, answer2 } = request.body;
-    const normalizedMail = mail.toLowerCase();
-
-    const user = await userDatamapper.findUserByEmail(normalizedMail);
-
-    if (!user) {
-      return response.status(401).json({ error: "Utilisateur introuvable" });
-    }
-
-    const validAnswer1 = await bcrypt.compare(answer1, user.first_answer);
-    if (!validAnswer1) {
-      return response.status(401).json({ error: "Réponse incorrecte" });
-    }
-
-    const validAnswer2 = await bcrypt.compare(answer2, user.second_answer);
-    if (!validAnswer2) {
-      return response.status(401).json({ error: "Réponse incorrecte" });
-    }
-
-    return response.status(200).json(normalizedMail);
-  },
-
-  resetingPassword: async (request, response) => {
-    delete request.body.passwordConfirm;
-
-    const { mail, password } = request.body;
-    const normalizedMail = mail.toLowerCase();
-
-    const user = await userDatamapper.findUserByEmail(normalizedMail);
-
-    if (!user) {
-      return response.status(401).json({ error: "Utilisateur introuvable" });
-    }
-
-    const salt = await bcrypt.genSalt(parseInt(saltRounds, 10));
-    const encryptedPassword = await bcrypt.hash(password, salt);
-
-    const updatedUser = await userDatamapper.updateUserPassword(
-      normalizedMail,
-      encryptedPassword
-    );
-
-    if (!updatedUser) {
-      return response.status(500).json({ error: "Une erreur est survenue lors de la modification" });
-    }
-
-    return response.status(200).send(updatedUser);
-  },
 
   // Vérification du token envoyé depuis le frontend
   verifyToken: async (request, response) => {
     const authHeader = request.headers['authorization'];
-
+  
     if (!authHeader) {
       return response.status(401).json({ error: "Autorisation manquante" });
     }
-
+  
     const token = authHeader.split(' ')[1];
-
+  
     if (!token) {
       return response.status(401).json({ error: "Token manquant, merci de vous reconnecter" });
     }
-
+  
     try {
       // Vérifier le token Firebase côté serveur
       const decodedToken = await admin.auth().verifyIdToken(token);
-      return response.status(200).json({ message: "Token valide", user: decodedToken });
+  
+      // Utiliser le firebaseUID (uid) pour mettre à jour la dernière activité
+      const userWithUID = await userDatamapper.findByFirebaseUID(decodedToken.uid);
+      if (!userWithUID) {
+        return response.status(401).json({error: "L'utilisateur n'a pas été retrouvé"})
+      }
+
+      
+      // Supposons que ta base de données enregistre l'utilisateur avec cet UID
+      const updatedLastActivity = await userDatamapper.updateLastActivity(userWithUID.id);
+  
+      if (!updatedLastActivity) {
+        return response.status(500).json({ error: "Impossible de modifier la date d'activité" });
+      }
+  
+      // Si la mise à jour est réussie, retourner une réponse avec succès
+      return response.status(200).json({ message: "Token valide et activité mise à jour", user: decodedToken });
+  
     } catch (error) {
+      console.error(error);
       return response.status(401).json({ error: "Token expiré ou invalide" });
     }
-  }
+  },
+
 };
+  

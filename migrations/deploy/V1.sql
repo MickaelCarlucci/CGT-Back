@@ -29,7 +29,7 @@ CREATE table "user" (
      "firstname" VARCHAR(20) NOT NULL,
      "lastname" VARCHAR(20) NOT NULL,
      "mail" VARCHAR(50) NOT NULL UNIQUE,
-     "password" VARCHAR(50) NOT NULL,
+     "firebaseUID" TEXT NOT NULL UNIQUE,
      "first_question" VARCHAR(60) NOT NULL,
      "first_answer" VARCHAR(50) NOT NULL,
      "second_question" VARCHAR(60) NOT NULL,

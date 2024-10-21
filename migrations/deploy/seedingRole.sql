@@ -15,8 +15,5 @@ VALUES
 ('Membre'),
 ('Nouvel inscrit');
 
-INSERT INTO "user_has_role" ("role_id", "user_id")
-VALUES
-(1, 1);
 
 COMMIT;
