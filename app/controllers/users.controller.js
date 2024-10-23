@@ -92,7 +92,7 @@ verifyEmailAndAssignRole: async (request, response) => {
 signIn: async (request, response) => {
   const { token } = request.body; // Le token JWT envoyé depuis le frontend
 
-  try {
+  
     // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
     const decodedToken = await admin.auth().verifyIdToken(token);
     const firebaseUID = decodedToken.uid;
@@ -114,10 +114,7 @@ signIn: async (request, response) => {
       message: "Connexion réussie",
       user, // Vous pouvez filtrer les données pour ne renvoyer que les informations nécessaires
     });
-  } catch (error) {
-    console.error("Erreur lors de la vérification du token Firebase:", error);
-    return response.status(401).json({ error: "Token invalide ou expiré" });
-  }
+ 
 },
 
 

@@ -12,8 +12,7 @@ VALUES
 ('CSE'),
 ('CSSCT'),
 ('RP'),
-('Membre'),
-('Nouvel inscrit');
+('Membre');
 
 
 COMMIT;

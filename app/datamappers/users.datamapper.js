@@ -38,7 +38,7 @@ GROUP BY "user".id;`,
 FROM "user"
 JOIN "user_has_role" ON "user".id = "user_has_role".user_id
 JOIN "role" ON "user_has_role".role_id = "role".id
-WHERE "user".firebaseUID = $1
+WHERE "user"."firebaseUID" = $1
 GROUP BY "user".id;`,
       values: [UID],
     };

@@ -11,7 +11,7 @@ const router = Router();
 router.route('/signup').post(controllerWrapper(usersController.signup)); //!
 router.route ('/verifyEmail').patch(controllerWrapper(usersController.verifyEmailAndAssignRole)); //!
 router.route('/:userId(\\d+)/delete').delete(firebaseAuthMiddleware, controllerWrapper(usersController.deleteUserAccount)); //!
-router.route('/signin').post(controllerWrapper(usersController.signIn)); //!
+router.route('/signin').get(controllerWrapper(usersController.signIn)); //!
 router.route('/findUser').get(controllerWrapper(profileController.findOneUserByMail));
 router.route('/findUserProfile/:userId(\\d+)').get(controllerWrapper(profileController.findOneUserById)); //!
 

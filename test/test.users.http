@@ -7,6 +7,7 @@ GET {{endpoint}}/api/users/findUser?email=frewmike59@yahoo.fr
 ###
 GET {{endpoint}}/api/users/findUserProfile/1
 
+
 ###
 POST {{ endpoint }}/api/users/signup
 content-type: application/json
@@ -31,12 +32,11 @@ content-type: application/json
 }
 
 ###
-POST {{ endpoint }}/api/users/signin
+GET {{ endpoint }}/api/users/signin
 content-type: application/json
 
 {
-    "mail": "frewmike59@yahoo.fr",
-    "password": "Statue59"
+    "token": "65pK3PDz6TP5cmx9Hhxm2yhkRrg2"
 }
 
 ###
