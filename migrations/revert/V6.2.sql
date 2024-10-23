@@ -3,6 +3,6 @@
 BEGIN;
 
 TRUNCATE TABLE "user_has_role" CASCADE;
-TRUNCATE TABLE "user" CASCADE;
+
 
 COMMIT;

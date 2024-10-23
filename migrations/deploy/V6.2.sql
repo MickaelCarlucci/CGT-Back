@@ -1,13 +1,19 @@
--- Deploy CGT-back:V6.2 to pg
+CREATE OR REPLACE FUNCTION assign_superadmin_role() 
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Vérifier si aucun utilisateur n'a encore le rôle SuperAdmin
+    IF NOT EXISTS (
+        SELECT 1 FROM "user_has_role" WHERE "role_id" = 1
+    ) THEN
+        -- Insérer le rôle SuperAdmin pour le nouvel utilisateur
+        INSERT INTO "user_has_role"("role_id", "user_id") 
+        VALUES (1, NEW.id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-BEGIN;
-
-INSERT INTO "user"("pseudo", "firstname", "lastname", "mail", "firebaseUID", "center_id", "activity_id", "emailverified")
-VALUES 
-('Mike', 'Mickael', 'Carlucci', 'frewmike17@gmail.com', '65pK3PDz6TP5cmx9Hhxm2yhkRrg2', 1, 47, true);
-
-INSERT INTO "user_has_role"("role_id", "user_id")
-VALUES
-(1, 1);
-
-COMMIT;
+-- Créer le trigger pour appeler la fonction après chaque insertion dans la table "user"
+CREATE TRIGGER assign_superadmin_trigger
+AFTER INSERT ON "user"
+FOR EACH ROW EXECUTE FUNCTION assign_superadmin_role();

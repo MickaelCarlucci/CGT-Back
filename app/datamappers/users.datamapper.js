@@ -216,7 +216,7 @@ GROUP BY "user".id;`,
 
   export async function updateEmailVerifiedStatus(isVerified, firebaseUID) {
     const query = {
-      text: `UPDATE "user" SET emailVerified = $1 WHERE firebaseUID = $2 RETURNING (mail);`,
+      text: `UPDATE "user" SET emailVerified = $1 WHERE "firebaseUID" = $2 RETURNING *;`,
       values: [isVerified, firebaseUID]
     };
     const result = await client.query(query);

@@ -63,42 +63,52 @@ export default {
 
 
 verifyEmailAndAssignRole: async (request, response) => {
-  const { firebaseUID } = request.body; // Recevoir l'UID de l'utilisateur depuis le frontend
+  const { firebaseUID } = request.body;
+  console.log("FirebaseUID reçu :", firebaseUID);
 
-      // Récupérer l'utilisateur depuis Firebase
+  try {
       const userRecord = await admin.auth().getUser(firebaseUID);
+    
 
-      // Vérifier si l'utilisateur a vérifié son e-mail
       if (userRecord.emailVerified) {
-          // Mettre à jour l'utilisateur dans la base de données (emailVerified = true)
+          // Mettre à jour le statut de vérification de l'email dans la base de données
           const updatedUser = await userDatamapper.updateEmailVerifiedStatus(true, firebaseUID);
+        
 
           if (!updatedUser) {
               return response.status(500).json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
           }
-
-          // Maintenant que l'e-mail est vérifié, attribuer un rôle à l'utilisateur
+          // Attribuer le rôle à l'utilisateur
           const roleNewUser = await roleDatamapper.linkUserWithRole("8", updatedUser.id);
+
           if (!roleNewUser) {
-              return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement du rôle" });
+              return response.status(500).json({ error: "Erreur lors de l'attribution du rôle" });
           }
 
           return response.status(200).json({ message: "Email vérifié et rôle attribué avec succès." });
       } else {
+          console.log("L'email n'est pas encore vérifié.");
           return response.status(400).json({ error: "L'e-mail n'a pas encore été vérifié." });
       }
+  } catch (error) {
+      console.error("Erreur lors du traitement de la vérification :", error);
+      return response.status(500).json({ error: "Erreur lors du traitement de la vérification." });
+  }
 },
 
 signIn: async (request, response) => {
   const { token } = request.body; // Le token JWT envoyé depuis le frontend
-
+  console.log("Token reçu :", token); // Ajout du log
   
     // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
     const decodedToken = await admin.auth().verifyIdToken(token);
+    console.log("Decoded Token :", decodedToken); // Vérifie le token décodé
     const firebaseUID = decodedToken.uid;
+    console.log("Recherche de l'utilisateur avec Firebase UID :", firebaseUID);
 
     // Vérifier si l'utilisateur existe dans la base de données
     const user = await userDatamapper.findByFirebaseUID(firebaseUID);
+    console.log("Utilisateur trouvé dans la base de données :", user);
     if (!user) {
       return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
     }
