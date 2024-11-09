@@ -11,7 +11,7 @@ export default {
       mail,
       firebaseUID,
       centerId,
-      activityId
+      activityId,
     } = request.body;
 
     const normalizedMail = mail.toLowerCase();
@@ -23,7 +23,9 @@ export default {
     );
 
     if (userEntriesCheck[0]) {
-      return response.status(401).json({ error: "L'utilisateur ou l'email existe déjà" });
+      return response
+        .status(401)
+        .json({ error: "L'utilisateur ou l'email existe déjà" });
     }
 
     // Ajout d'un log pour vérifier les valeurs avant l'insertion
@@ -35,7 +37,7 @@ export default {
       firebaseUID,
       centerId,
       activityId,
-      emailVerified: false
+      emailVerified: false,
     });
 
     try {
@@ -47,59 +49,76 @@ export default {
         normalizedMail,
         firebaseUID,
         centerId,
-        activityId,
+        activityId
       );
 
       if (!user) {
-        return response.status(500).json({ error: "Une erreur est survenue pendant l'enregistrement" });
+        return response
+          .status(500)
+          .json({ error: "Une erreur est survenue pendant l'enregistrement" });
       }
 
-      return response.status(200).json({ message: "Utilisateur créé, veuillez vérifier votre email." });
+      return response
+        .status(200)
+        .json({ message: "Utilisateur créé, veuillez vérifier votre email." });
     } catch (error) {
       console.error("Erreur lors de la création de l'utilisateur :", error);
       return response.status(500).json({ error: "Erreur interne du serveur" });
     }
-},
+  },
 
+  verifyEmailAndAssignRole: async (request, response) => {
+    const { firebaseUID } = request.body;
+    console.log("FirebaseUID reçu :", firebaseUID);
 
-verifyEmailAndAssignRole: async (request, response) => {
-  const { firebaseUID } = request.body;
-  console.log("FirebaseUID reçu :", firebaseUID);
-
-  try {
+    try {
       const userRecord = await admin.auth().getUser(firebaseUID);
-    
 
       if (userRecord.emailVerified) {
-          // Mettre à jour le statut de vérification de l'email dans la base de données
-          const updatedUser = await userDatamapper.updateEmailVerifiedStatus(true, firebaseUID);
-        
+        // Mettre à jour le statut de vérification de l'email dans la base de données
+        const updatedUser = await userDatamapper.updateEmailVerifiedStatus(
+          true,
+          firebaseUID
+        );
 
-          if (!updatedUser) {
-              return response.status(500).json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
-          }
-          // Attribuer le rôle à l'utilisateur
-          const roleNewUser = await roleDatamapper.linkUserWithRole("8", updatedUser.id);
+        if (!updatedUser) {
+          return response
+            .status(500)
+            .json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
+        }
+        // Attribuer le rôle à l'utilisateur
+        const roleNewUser = await roleDatamapper.linkUserWithRole(
+          "8",
+          updatedUser.id
+        );
 
-          if (!roleNewUser) {
-              return response.status(500).json({ error: "Erreur lors de l'attribution du rôle" });
-          }
+        if (!roleNewUser) {
+          return response
+            .status(500)
+            .json({ error: "Erreur lors de l'attribution du rôle" });
+        }
 
-          return response.status(200).json({ message: "Email vérifié et rôle attribué avec succès." });
+        return response
+          .status(200)
+          .json({ message: "Email vérifié et rôle attribué avec succès." });
       } else {
-          console.log("L'email n'est pas encore vérifié.");
-          return response.status(400).json({ error: "L'e-mail n'a pas encore été vérifié." });
+        console.log("L'email n'est pas encore vérifié.");
+        return response
+          .status(400)
+          .json({ error: "L'e-mail n'a pas encore été vérifié." });
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Erreur lors du traitement de la vérification :", error);
-      return response.status(500).json({ error: "Erreur lors du traitement de la vérification." });
-  }
-},
+      return response
+        .status(500)
+        .json({ error: "Erreur lors du traitement de la vérification." });
+    }
+  },
 
-signIn: async (request, response) => {
-  const { token } = request.body; // Le token JWT envoyé depuis le frontend
-  console.log("Token reçu :", token); // Ajout du log
-  
+  signIn: async (request, response) => {
+    const { token } = request.body; // Le token JWT envoyé depuis le frontend
+    console.log("Token reçu :", token); // Ajout du log
+
     // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
     const decodedToken = await admin.auth().verifyIdToken(token);
     console.log("Decoded Token :", decodedToken); // Vérifie le token décodé
@@ -110,13 +129,21 @@ signIn: async (request, response) => {
     const user = await userDatamapper.findByFirebaseUID(firebaseUID);
     console.log("Utilisateur trouvé dans la base de données :", user);
     if (!user) {
-      return response.status(401).json({ error: "L'utilisateur n'existe pas ou le mot de passe est incorrect" });
+      return response
+        .status(401)
+        .json({
+          error: "L'utilisateur n'existe pas ou le mot de passe est incorrect",
+        });
     }
 
     // Mettre à jour la dernière activité de l'utilisateur
-    const updatedLastActivity = await userDatamapper.updateLastActivity(user.id);
+    const updatedLastActivity = await userDatamapper.updateLastActivity(
+      user.id
+    );
     if (!updatedLastActivity) {
-      return response.status(500).json({ error: "Impossible de modifier la date d'activité" });
+      return response
+        .status(500)
+        .json({ error: "Impossible de modifier la date d'activité" });
     }
 
     // Renvoyer les informations de l'utilisateur (vous pouvez personnaliser ces informations)
@@ -124,9 +151,7 @@ signIn: async (request, response) => {
       message: "Connexion réussie",
       user, // Vous pouvez filtrer les données pour ne renvoyer que les informations nécessaires
     });
- 
-},
-
+  },
 
   deleteUserAccount: async (request, response) => {
     const { userId } = request.params;
@@ -149,47 +174,83 @@ signIn: async (request, response) => {
     return response.status(200).send(deletedUser);
   },
 
-
   // Vérification du token envoyé depuis le frontend
   verifyToken: async (request, response) => {
-    const authHeader = request.headers['authorization'];
-  
+    const authHeader = request.headers["authorization"];
+
     if (!authHeader) {
       return response.status(401).json({ error: "Autorisation manquante" });
     }
-  
-    const token = authHeader.split(' ')[1];
-  
+
+    const token = authHeader.split(" ")[1];
+
     if (!token) {
-      return response.status(401).json({ error: "Token manquant, merci de vous reconnecter" });
+      return response
+        .status(401)
+        .json({ error: "Token manquant, merci de vous reconnecter" });
     }
-  
+
     try {
       // Vérifier le token Firebase côté serveur
       const decodedToken = await admin.auth().verifyIdToken(token);
-  
+
       // Utiliser le firebaseUID (uid) pour mettre à jour la dernière activité
-      const userWithUID = await userDatamapper.findByFirebaseUID(decodedToken.uid);
+      const userWithUID = await userDatamapper.findByFirebaseUID(
+        decodedToken.uid
+      );
       if (!userWithUID) {
-        return response.status(401).json({error: "L'utilisateur n'a pas été retrouvé"})
+        return response
+          .status(401)
+          .json({ error: "L'utilisateur n'a pas été retrouvé" });
       }
 
-      
       // Supposons que ta base de données enregistre l'utilisateur avec cet UID
-      const updatedLastActivity = await userDatamapper.updateLastActivity(userWithUID.id);
-  
+      const updatedLastActivity = await userDatamapper.updateLastActivity(
+        userWithUID.id
+      );
+
       if (!updatedLastActivity) {
-        return response.status(500).json({ error: "Impossible de modifier la date d'activité" });
+        return response
+          .status(500)
+          .json({ error: "Impossible de modifier la date d'activité" });
       }
-  
+
       // Si la mise à jour est réussie, retourner une réponse avec succès
-      return response.status(200).json({ message: "Token valide et activité mise à jour", user: decodedToken });
-  
+      return response
+        .status(200)
+        .json({
+          message: "Token valide et activité mise à jour",
+          user: decodedToken,
+        });
     } catch (error) {
       console.error(error);
       return response.status(401).json({ error: "Token expiré ou invalide" });
     }
   },
 
+  getUserByUID: async (request, response) => {
+    const { uid } = request.params; // UID transmis en tant que paramètre de l'URL
+
+    if (!uid) {
+      return response.status(400).json({ error: "UID manquant" });
+    }
+
+    try {
+      // Récupérer l'utilisateur depuis la base de données en utilisant l'UID
+      const user = await userDatamapper.findByFirebaseUID(uid);
+
+      if (!user) {
+        return response.status(404).json({ error: "Utilisateur non trouvé" });
+      }
+
+      // Retourner les informations de l'utilisateur
+      return response.status(200).json({ user });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de l'utilisateur par UID:",
+        error
+      );
+      return response.status(500).json({ error: "Erreur interne du serveur" });
+    }
+  },
 };
-  
