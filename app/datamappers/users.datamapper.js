@@ -221,3 +221,13 @@ export async function updateEmailVerifiedStatus(isVerified, firebaseUID) {
   const result = await client.query(query);
   return result.rows[0];
 }
+
+export async function findUID(userId) {
+  const query = {
+    text: `SELECT "firebaseUID" from "user"
+           WHERE id = $1`,
+    values: [userId],
+  };
+  const result = await client.query(query);
+  return result.rows[0];
+}

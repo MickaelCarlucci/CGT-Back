@@ -7,6 +7,7 @@ FROM "role"
 JOIN "user_has_role" ON "role".id = "user_has_role".role_id
 JOIN "user" ON "user_has_role".user_id = "user".id
 WHERE "role".id != 1
+AND "user".id != 1
 ORDER BY "user".lastname ASC;`,
   };
   const result = await client.query(query);

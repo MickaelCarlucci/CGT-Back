@@ -28,18 +28,6 @@ export default {
         .json({ error: "L'utilisateur ou l'email existe déjà" });
     }
 
-    // Ajout d'un log pour vérifier les valeurs avant l'insertion
-    console.log("Données utilisateur avant création : ", {
-      pseudo,
-      firstname,
-      lastname,
-      mail: normalizedMail,
-      firebaseUID,
-      centerId,
-      activityId,
-      emailVerified: false,
-    });
-
     try {
       // Créer l'utilisateur avec emailVerified = false par défaut
       const user = await userDatamapper.createUser(
@@ -69,7 +57,6 @@ export default {
 
   verifyEmailAndAssignRole: async (request, response) => {
     const { firebaseUID } = request.body;
-    console.log("FirebaseUID reçu :", firebaseUID);
 
     try {
       const userRecord = await admin.auth().getUser(firebaseUID);
@@ -102,7 +89,6 @@ export default {
           .status(200)
           .json({ message: "Email vérifié et rôle attribué avec succès." });
       } else {
-        console.log("L'email n'est pas encore vérifié.");
         return response
           .status(400)
           .json({ error: "L'e-mail n'a pas encore été vérifié." });
@@ -117,23 +103,17 @@ export default {
 
   signIn: async (request, response) => {
     const { token } = request.body; // Le token JWT envoyé depuis le frontend
-    console.log("Token reçu :", token); // Ajout du log
 
     // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
     const decodedToken = await admin.auth().verifyIdToken(token);
-    console.log("Decoded Token :", decodedToken); // Vérifie le token décodé
     const firebaseUID = decodedToken.uid;
-    console.log("Recherche de l'utilisateur avec Firebase UID :", firebaseUID);
 
     // Vérifier si l'utilisateur existe dans la base de données
     const user = await userDatamapper.findByFirebaseUID(firebaseUID);
-    console.log("Utilisateur trouvé dans la base de données :", user);
     if (!user) {
-      return response
-        .status(401)
-        .json({
-          error: "L'utilisateur n'existe pas ou le mot de passe est incorrect",
-        });
+      return response.status(401).json({
+        error: "L'utilisateur n'existe pas ou le mot de passe est incorrect",
+      });
     }
 
     // Mettre à jour la dernière activité de l'utilisateur
@@ -172,6 +152,22 @@ export default {
     const deletedUser = await userDatamapper.deleteUser(mail);
 
     return response.status(200).send(deletedUser);
+  },
+
+  deleteUserByAdmin: async (request, response) => {
+    const userId = request.params.userId;
+
+    const userUid = await userDatamapper.findUID(userId);
+
+    if (!userUid) {
+      return response
+        .status(404)
+        .json({ error: "Aucun utilisateur n'a été trouvé" });
+    }
+    await admin.auth().deleteUser(userUid.firebaseUID);
+    return response
+      .status(200)
+      .send({ message: "Utilisateur supprimé avec succès" });
   },
 
   // Vérification du token envoyé depuis le frontend
@@ -216,12 +212,10 @@ export default {
       }
 
       // Si la mise à jour est réussie, retourner une réponse avec succès
-      return response
-        .status(200)
-        .json({
-          message: "Token valide et activité mise à jour",
-          user: decodedToken,
-        });
+      return response.status(200).json({
+        message: "Token valide et activité mise à jour",
+        user: decodedToken,
+      });
     } catch (error) {
       console.error(error);
       return response.status(401).json({ error: "Token expiré ou invalide" });

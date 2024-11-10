@@ -77,6 +77,13 @@ router
   .post(controllerWrapper(usersController.verifyToken)); //!
 router
   .route("/get-by-uid/:uid([A-Za-z0-9_-]+)")
-  .get(controllerWrapper(usersController.getUserByUID));
+  .get(controllerWrapper(usersController.getUserByUID)); //!
+
+router
+  .route("/:userId(\\d+)/delete-by-admin")
+  .delete(
+    firebaseAuthMiddleware,
+    controllerWrapper(usersController.deleteUserByAdmin)
+  ); //!
 
 export default router;
