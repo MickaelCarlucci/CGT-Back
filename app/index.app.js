@@ -14,7 +14,7 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(
+/*app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
@@ -25,6 +25,12 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes HTTP autorisées
     credentials: true, // Autoriser les cookies ou les credentials
+  })
+);*/
+
+app.use(
+  cors({
+    origin: "*",
   })
 );
 
