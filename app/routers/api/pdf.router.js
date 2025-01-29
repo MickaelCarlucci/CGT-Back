@@ -18,14 +18,24 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 40 * 1024 * 1024 }, // 40 Mo max
+});
 
 // route pdf
 router
   .route("/upload")
   .post(
     firebaseAuthMiddleware,
-    upload.single("file"),
+    (req, res, next) => {
+      upload.single("file")(req, res, (err) => {
+        if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+          return res.status(400).json({ error: "Le fichier est trop volumineux (max 40MB)" });
+        }
+        next();
+      });
+    },
     controllerWrapper(pdfController.upload)
   );
 router
