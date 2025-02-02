@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
+import fs from "fs";
 import router from "./routers/index.router.js";
 
 const allowedOrigins = [
@@ -40,12 +41,18 @@ app.use(
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-app.use("/uploads", express.static("/root/CGT-Back/uploads"));
-app.get("/test-uploads", (req, res) => {
-  res.send(
-    `Dossier uploads utilisé : ${path.resolve("/root/CGT-Back/uploads")}`
-  );
-});
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    const filePath = path.join("/root/CGT-Back/uploads", req.path);
+    console.log("🔍 Tentative d'accès au fichier :", filePath);
+    if (!fs.existsSync(filePath)) {
+      console.error("⚠️ Fichier introuvable :", filePath);
+    }
+    next();
+  },
+  express.static("/root/CGT-Back/uploads")
+);
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use(router);
