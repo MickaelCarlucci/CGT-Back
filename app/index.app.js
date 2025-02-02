@@ -37,13 +37,17 @@ app.use(
   })
 );
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-app.use("/uploads", (req, res, next) => {
-  console.log("Tentative d'accès :", req.path);
-  next();
-}, express.static(uploadPath));
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    console.log("Tentative d'accès :", req.path);
+    next();
+  },
+  express.static(uploadPath)
+);
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use(router);
