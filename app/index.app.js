@@ -14,8 +14,6 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadPath = path.join(__dirname, "../uploads");
-console.log("📂 Chemin absolu utilisé pour /uploads :", uploadPath);
 
 /*app.use(
   cors({
@@ -40,10 +38,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/uploads", (req, res, next) => {
-  console.log("Tentative d'accès :", req.path);
-  next();
-}, express.static(uploadPath));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use(router);
