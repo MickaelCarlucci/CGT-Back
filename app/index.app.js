@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import { fileURLToPath } from "url";
 import path from "path";
-import fs from "fs";
 import router from "./routers/index.router.js";
 
 const allowedOrigins = [
@@ -14,6 +13,8 @@ const allowedOrigins = [
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const uploadsPath = path.join(__dirname, 'uploads');
 
 
 /*app.use(
@@ -39,7 +40,7 @@ app.use(
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(uploadsPath));
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use(router);

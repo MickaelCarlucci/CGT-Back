@@ -16,12 +16,13 @@ export default {
         const pdf_url = `/uploads/${request.file.filename}`;
     
         // Changer les permissions après l'upload
-        try {
-          fs.chmodSync(`uploads/${request.file.filename}`, 0o755);
-          console.log(`Permissions modifiées pour : ${request.file.filename}`);
-        } catch (error) {
-          console.error("Erreur lors de la modification des permissions :", error);
-        }
+        const uploadedFilePath = path.join(__dirname, '..', '..', 'uploads', request.file.filename);
+try {
+  await fs.chmod(uploadedFilePath, 0o755);
+  console.log(`✅ Permissions modifiées pour : ${uploadedFilePath}`);
+} catch (error) {
+  console.error("❌ Erreur lors de la modification des permissions :", error);
+}
     
         const newPdf = await pdfDatamapper.create(title, pdf_url, section_id, center_id);
         if (!newPdf) {
