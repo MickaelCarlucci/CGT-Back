@@ -14,8 +14,8 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const uploadsPath = path.join(__dirname, 'uploads');
-
+const uploadsPath = path.join(__dirname, "..", "uploads");
+console.log("📂 Chemin absolu des fichiers : ", uploadsPath);
 
 /*app.use(
   cors({
