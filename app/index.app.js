@@ -40,10 +40,16 @@ app.use(
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-app.use('/uploads', (req, res, next) => {
-  console.log("📥 Requête reçue pour :", req.url);
-  next();
-}, express.static(uploadsPath));
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    next();
+  },
+  express.static(uploadsPath)
+);
 app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.use(router);
