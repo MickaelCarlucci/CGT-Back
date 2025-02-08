@@ -4,18 +4,26 @@ import { fileURLToPath } from "url";
 import path from "path";
 import router from "./routers/index.router.js";
 
-const allowedOrigins = [
+/*const allowedOrigins = [
   "https://cgt-teleperformance.fr", // Domaine du site Next.js
   "http://localhost:3000", // URL utilisée par React Native en développement
   "http://localhost:8081", // URL react Native
-];
+];*/
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// ✅ Définit le chemin ABSOLU du dossier uploads
 const uploadsPath = path.join(__dirname, "../uploads");
 console.log("📂 Chemin absolu des fichiers : ", uploadsPath);
+
+import fs from "fs";
+if (!fs.existsSync(uploadsPath)) {
+  console.error("❌ ERREUR : Le dossier uploads n'existe pas !");
+} else {
+  console.log("✅ Le dossier uploads existe bien.");
+}
 
 /*app.use(
   cors({
