@@ -15,8 +15,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ✅ Définit le chemin ABSOLU du dossier uploads
-const uploadsPath = path.join(__dirname, "../uploads");
-console.log("📂 Chemin absolu des fichiers : ", uploadsPath);
+const uploadsPath = "/var/www/uploads";
+console.log("📂 Nouveau chemin absolu des fichiers : ", uploadsPath);
 
 import fs from "fs";
 if (!fs.existsSync(uploadsPath)) {
