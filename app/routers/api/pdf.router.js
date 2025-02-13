@@ -9,7 +9,7 @@ const router = Router();
 // Configuration de multer pour stocker les fichiers dans le dossier 'uploads/'
 const storage = multer.diskStorage({
   destination: (request, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "/var/www/uploads/");
   },
   filename: (req, file, cb) => {
     // Génère un nom unique pour le fichier

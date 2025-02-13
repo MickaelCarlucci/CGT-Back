@@ -16,7 +16,7 @@ export default {
         const pdf_url = `/uploads/${request.file.filename}`;
     
         // Changer les permissions après l'upload
-        const uploadedFilePath = path.join(__dirname, '..', '..', 'uploads', request.file.filename);
+        const uploadedFilePath = path.join('/var/www/uploads', request.file.filename);
 try {
   await fs.chmod(uploadedFilePath, 0o755);
   console.log(`✅ Permissions modifiées pour : ${uploadedFilePath}`);
@@ -37,7 +37,7 @@ try {
         const {filename} = request.params;
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
-        const filePath = path.join(__dirname, '../../uploads', filename);
+        const filePath = path.join('/var/www/uploads', filename);
 
         
         response.download(filePath, error => {
@@ -59,10 +59,10 @@ try {
                 return response.status(404).json({ error: "Le fichier n'a pas été trouvé." });
             }
     
-            const filePath = pdf.pdf_url;
+            const filePath = path.join('/var/www/uploads', pdf.pdf_url.split('/').pop());
     
             // Supprimer le fichier
-            await fs.unlink(path.join(__dirname, '..', '..', filePath));
+            await fs.unlink(filePath);
     
             // Supprimer l'entrée dans la base de données
             await pdfDatamapper.deleteFile(fileId);
