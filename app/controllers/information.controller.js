@@ -83,11 +83,9 @@ export default {
 
     const updatedTitle = await infoDatamapper.updateTitle(newTitle, newsId);
     if (!updatedTitle) {
-      return response
-        .status(500)
-        .json({
-          error: "Une erreur s'est produite pendant la modification du titre",
-        });
+      return response.status(500).json({
+        error: "Une erreur s'est produite pendant la modification du titre",
+      });
     }
     return response.status(200).send(updatedTitle);
   },
@@ -101,11 +99,9 @@ export default {
       newsId
     );
     if (!updatedContain) {
-      return response
-        .status(500)
-        .json({
-          error: "Une erreur s'est produite pendant la modification du contenu",
-        });
+      return response.status(500).json({
+        error: "Une erreur s'est produite pendant la modification du contenu",
+      });
     }
     return response.status(200).send(updatedContain);
   },
@@ -141,30 +137,56 @@ export default {
   },
 
   deleteInformation: async (request, response) => {
-    const { newsId } = request.params;
+    try {
+      const { newsId } = request.params;
+      console.log(`🔍 Tentative de suppression de la news ID: ${newsId}`);
 
-    const information = await infoDatamapper.findById(newsId);
-    if (!information) {
-      return response.status(404).json({ error: "News introuvable" });
-    }
-
-    if (information.image_url) {
-      const imagePath = path.join(__dirname, "..", "..", information.image_url);
-      try {
-        await fs.unlink(imagePath);
-        console.log(`✅ Image supprimée : ${imagePath}`);
-      } catch (error) {
-        console.error("❌ Erreur lors de la suppression de l'image :", error);
+      // 1️⃣ Vérifier si la news existe
+      const information = await infoDatamapper.findById(newsId);
+      if (!information) {
+        console.log("❌ News introuvable en base.");
+        return response.status(404).json({ error: "News introuvable" });
       }
-    }
 
-    const deletedInformation = await infoDatamapper.DeleteNews(newsId);
-    if (!deletedInformation) {
+      console.log("📄 News trouvée :", information);
+
+      // 2️⃣ Supprimer l'image si elle existe
+      if (information.image_url) {
+        const imagePath = path.join(
+          __dirname,
+          "..",
+          "..",
+          information.image_url
+        );
+        console.log(`🖼️ Tentative de suppression de l'image : ${imagePath}`);
+
+        try {
+          await fs.unlink(imagePath);
+          console.log(`✅ Image supprimée : ${imagePath}`);
+        } catch (error) {
+          console.error("❌ Erreur lors de la suppression de l'image :", error);
+          // Continuer la suppression même si l'image ne peut pas être supprimée
+        }
+      } else {
+        console.log("ℹ️ Aucune image à supprimer.");
+      }
+
+      // 3️⃣ Supprimer la news en base de données
+      const deletedInformation = await infoDatamapper.DeleteNews(newsId);
+      if (!deletedInformation) {
+        console.log("❌ Erreur lors de la suppression de la news.");
+        return response
+          .status(500)
+          .json({ error: "Erreur lors de la suppression de la news" });
+      }
+
+      console.log("✅ News supprimée avec succès !");
       return response
-        .status(500)
-        .json({ error: "Erreur lors de la suppression de la news" });
+        .status(200)
+        .json({ message: "News supprimée avec succès" });
+    } catch (error) {
+      console.error("🔥 Erreur interne dans deleteInformation :", error);
+      return response.status(500).json({ error: "Erreur interne du serveur" });
     }
-
-    return response.status(200).send(deletedInformation);
   },
 };
