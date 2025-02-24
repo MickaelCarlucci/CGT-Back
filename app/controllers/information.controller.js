@@ -2,6 +2,11 @@ import * as infoDatamapper from "../datamappers/information.datamapper.js";
 import sanitizeHtml from "sanitize-html";
 import fs from "fs/promises";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default {
   newInformation: async (request, response) => {
