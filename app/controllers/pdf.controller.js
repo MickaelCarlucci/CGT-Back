@@ -1,6 +1,5 @@
 import * as pdfDatamapper from "../datamappers/pdf.datamapper.js";
 import path from "path";
-import { fileURLToPath } from "url";
 import fs from "fs/promises";
 
 export default {
@@ -56,8 +55,6 @@ export default {
 
   download: async (request, response) => {
     const { filename } = request.params;
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
     const filePath = path.join("/var/www/uploads", filename);
 
     response.download(filePath, (error) => {
@@ -70,8 +67,6 @@ export default {
   },
 
   deletePdf: async (request, response) => {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
     try {
       const { fileId } = request.params;
       const pdf = await pdfDatamapper.findById(fileId);
