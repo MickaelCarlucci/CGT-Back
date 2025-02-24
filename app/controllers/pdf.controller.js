@@ -11,7 +11,15 @@ export default {
     if (!request.file) {
       return response.status(400).json({ error: "aucun fichier téléchargé" });
     }
-    const title = request.file.originalname;
+    let title = request.file.originalname;
+    if (!Buffer.from(title, "utf8").toString("utf8") === title) {
+      console.warn("⚠️ Titre mal encodé, tentative de correction...");
+      title = Buffer.from(title, "latin1").toString("utf8");
+    }
+
+    // Normalisation et nettoyage du titre
+    title = title.normalize("NFC").replace(/[^\w\s\-.]/gi, "");
+
     const pdf_url = `/uploads/${request.file.filename}`;
 
     // Changer les permissions après l'upload
@@ -36,11 +44,9 @@ export default {
       center_id
     );
     if (!newPdf) {
-      return response
-        .status(500)
-        .json({
-          error: "Le fichier n'a pas pu être ajouté à la base de données",
-        });
+      return response.status(500).json({
+        error: "Le fichier n'a pas pu être ajouté à la base de données",
+      });
     }
 
     return response
