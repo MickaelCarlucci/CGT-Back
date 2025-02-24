@@ -9,28 +9,14 @@ export default {
     const section_id = request.body.section_id;
 
     if (!request.file) {
-      return response.status(400).json({ error: "Aucun fichier téléchargé" });
+      return response.status(400).json({ error: "aucun fichier téléchargé" });
     }
-
-    let title = request.file.originalname;
-
-    // Vérification et correction de l'encodage UTF-8
-    if (!Buffer.from(title, "utf8").toString("utf8") === title) {
-      console.warn("⚠️ Titre mal encodé, tentative de correction...");
-      title = Buffer.from(title, "latin1").toString("utf8");
-    }
-
-    // Normalisation et nettoyage du titre
-    title = title.normalize("NFC").replace(/[^\w\s\-.]/gi, "");
-
+    const title = request.file.originalname;
     const pdf_url = `/uploads/${request.file.filename}`;
 
-    // Modifier les permissions après l'upload
+    // Changer les permissions après l'upload
     const uploadedFilePath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "uploads",
+      "/var/www/uploads",
       request.file.filename
     );
     try {
@@ -66,7 +52,7 @@ export default {
     const { filename } = request.params;
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const filePath = path.join(__dirname, "../../uploads", filename);
+    const filePath = path.join("/var/www/uploads", filename);
 
     response.download(filePath, (error) => {
       if (error) {
@@ -90,10 +76,13 @@ export default {
           .json({ error: "Le fichier n'a pas été trouvé." });
       }
 
-      const filePath = pdf.pdf_url;
+      const filePath = path.join(
+        "/var/www/uploads",
+        pdf.pdf_url.split("/").pop()
+      );
 
       // Supprimer le fichier
-      await fs.unlink(path.join(__dirname, "..", "..", filePath));
+      await fs.unlink(filePath);
 
       // Supprimer l'entrée dans la base de données
       await pdfDatamapper.deleteFile(fileId);
