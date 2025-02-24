@@ -74,6 +74,7 @@ export default {
     const { newsId } = request.params;
 
     const news = await infoDatamapper.findById(newsId);
+    console.log(news.image_url);
     if (!news) {
       return response
         .status(500)
