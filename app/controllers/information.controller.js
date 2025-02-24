@@ -178,17 +178,8 @@ export default {
 
       // 3️⃣ Supprimer la news en base de données
       const deletedInformation = await infoDatamapper.DeleteNews(newsId);
-      if (!deletedInformation) {
-        console.log("❌ Erreur lors de la suppression de la news.");
-        return response
-          .status(500)
-          .json({ error: "Erreur lors de la suppression de la news" });
-      }
 
-      console.log("✅ News supprimée avec succès !");
-      return response
-        .status(200)
-        .json({ message: "News supprimée avec succès" });
+      return response.status(200).send(deletedInformation);
     } catch (error) {
       console.error("🔥 Erreur interne dans deleteInformation :", error);
       return response.status(500).json({ error: "Erreur interne du serveur" });
