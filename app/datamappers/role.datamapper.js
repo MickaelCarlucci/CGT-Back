@@ -134,6 +134,7 @@ WHERE "user".id IN (
     JOIN "user_has_role" ON "user".id = "user_has_role".user_id
     WHERE "user_has_role".role_id = $1
 )
+AND "role".id IN (4, 5, 6, 7)
 GROUP BY 
     "user".id, 
     "user".lastname, 
