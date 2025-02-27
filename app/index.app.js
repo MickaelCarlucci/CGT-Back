@@ -4,11 +4,9 @@ import { fileURLToPath } from "url";
 import path from "path";
 import router from "./routers/index.router.js";
 
-/*const allowedOrigins = [
-  "https://cgt-teleperformance.fr", // Domaine du site Next.js
-  "http://localhost:3000", // URL utilisée par React Native en développement
-  "http://localhost:8081", // URL react Native
-];*/
+const allowedOrigins = [
+  "https://cgt-tp.fr", // Domaine du site Next.js
+];
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +23,7 @@ if (!fs.existsSync(uploadsPath)) {
   console.log("✅ Le dossier uploads existe bien.");
 }
 
-/*app.use(
+app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
@@ -37,13 +35,13 @@ if (!fs.existsSync(uploadsPath)) {
     methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes HTTP autorisées
     credentials: true, // Autoriser les cookies ou les credentials
   })
-);*/
+);
 
-app.use(
+/*app.use(
   cors({
     origin: "*",
   })
-);
+);*/
 
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
