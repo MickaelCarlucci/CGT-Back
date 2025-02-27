@@ -1,4 +1,4 @@
-import admin from "../../firebaseAdmin.js"; // Firebase Admin SDK importé
+import admin from "../../firebaseAdmin.js";
 import * as userDatamapper from "../datamappers/users.datamapper.js";
 import * as roleDatamapper from "../datamappers/role.datamapper.js";
 
@@ -16,7 +16,6 @@ export default {
 
     const normalizedMail = mail.toLowerCase();
 
-    // Vérifier si l'utilisateur existe déjà
     const userEntriesCheck = await userDatamapper.checkUsersInformations(
       pseudo,
       normalizedMail
@@ -29,7 +28,6 @@ export default {
     }
 
     try {
-      // Créer l'utilisateur avec emailVerified = false par défaut
       const user = await userDatamapper.createUser(
         pseudo,
         firstname,
@@ -62,7 +60,6 @@ export default {
       const userRecord = await admin.auth().getUser(firebaseUID);
 
       if (userRecord.emailVerified) {
-        // Mettre à jour le statut de vérification de l'email dans la base de données
         const updatedUser = await userDatamapper.updateEmailVerifiedStatus(
           true,
           firebaseUID
@@ -73,7 +70,6 @@ export default {
             .status(500)
             .json({ error: "Erreur lors de la mise à jour de l'utilisateur" });
         }
-        // Attribuer le rôle à l'utilisateur
         const roleNewUser = await roleDatamapper.linkUserWithRole(
           "8",
           updatedUser.id
@@ -102,13 +98,11 @@ export default {
   },
 
   signIn: async (request, response) => {
-    const { token } = request.body; // Le token JWT envoyé depuis le frontend
+    const { token } = request.body;
 
-    // Vérification du token Firebase côté serveur pour s'assurer de l'identité de l'utilisateur
     const decodedToken = await admin.auth().verifyIdToken(token);
     const firebaseUID = decodedToken.uid;
 
-    // Vérifier si l'utilisateur existe dans la base de données
     const user = await userDatamapper.findByFirebaseUID(firebaseUID);
     if (!user) {
       return response.status(401).json({
@@ -116,7 +110,6 @@ export default {
       });
     }
 
-    // Mettre à jour la dernière activité de l'utilisateur
     const updatedLastActivity = await userDatamapper.updateLastActivity(
       user.id
     );
@@ -126,10 +119,9 @@ export default {
         .json({ error: "Impossible de modifier la date d'activité" });
     }
 
-    // Renvoyer les informations de l'utilisateur (vous pouvez personnaliser ces informations)
     return response.status(200).json({
       message: "Connexion réussie",
-      user, // Vous pouvez filtrer les données pour ne renvoyer que les informations nécessaires
+      user,
     });
   },
 
@@ -170,7 +162,6 @@ export default {
       .send({ message: "Utilisateur supprimé avec succès" });
   },
 
-  // Vérification du token envoyé depuis le frontend
   verifyToken: async (request, response) => {
     const authHeader = request.headers["authorization"];
 
@@ -187,10 +178,8 @@ export default {
     }
 
     try {
-      // Vérifier le token Firebase côté serveur
       const decodedToken = await admin.auth().verifyIdToken(token);
 
-      // Utiliser le firebaseUID (uid) pour mettre à jour la dernière activité
       const userWithUID = await userDatamapper.findByFirebaseUID(
         decodedToken.uid
       );
@@ -200,7 +189,6 @@ export default {
           .json({ error: "L'utilisateur n'a pas été retrouvé" });
       }
 
-      // Supposons que ta base de données enregistre l'utilisateur avec cet UID
       const updatedLastActivity = await userDatamapper.updateLastActivity(
         userWithUID.id
       );
@@ -211,7 +199,6 @@ export default {
           .json({ error: "Impossible de modifier la date d'activité" });
       }
 
-      // Si la mise à jour est réussie, retourner une réponse avec succès
       return response.status(200).json({
         message: "Token valide et activité mise à jour",
         user: decodedToken,
@@ -223,21 +210,19 @@ export default {
   },
 
   getUserByUID: async (request, response) => {
-    const { uid } = request.params; // UID transmis en tant que paramètre de l'URL
+    const { uid } = request.params;
 
     if (!uid) {
       return response.status(400).json({ error: "UID manquant" });
     }
 
     try {
-      // Récupérer l'utilisateur depuis la base de données en utilisant l'UID
       const user = await userDatamapper.findByFirebaseUID(uid);
 
       if (!user) {
         return response.status(404).json({ error: "Utilisateur non trouvé" });
       }
 
-      // Retourner les informations de l'utilisateur
       return response.status(200).json({ user });
     } catch (error) {
       console.error(

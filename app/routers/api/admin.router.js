@@ -8,7 +8,7 @@ import controllerWrapper from "../../helpers/controllerWrapper.js";
 import firebaseAuthMiddleware from "../../helpers/firebaseAuthMiddleware.js";
 
 const router = Router();
-//center routes
+
 router
   .route("/centers")
   .get(controllerWrapper(centerController.findAllCenters));
@@ -43,7 +43,6 @@ router
   .route("/center/:centerId(\\d+)/activities")
   .get(controllerWrapper(centerController.findActivitiesByCenter));
 
-//activity routes
 router
   .route("/activities")
   .get(controllerWrapper(activityController.findAllActivities));
@@ -78,7 +77,6 @@ router
   .route("/activity/:activityId(\\d+)/centers")
   .get(controllerWrapper(activityController.findCenterByActivity));
 
-//role routes
 router.route("/roles").get(controllerWrapper(roleController.findRoles));
 router
   .route("/role/:roleId(\\d+)")
@@ -96,12 +94,10 @@ router
   .route("/:userId(\\d+)/roles")
   .get(controllerWrapper(roleController.checkRoleFromUser));
 
-//section route
 router
   .route("/sections")
   .get(controllerWrapper(sectionController.getAllSection));
 
-//contact routes
 router.route("/elected").get(controllerWrapper(roleController.getElected));
 router
   .route("/elected/:centerId(\\d+)")

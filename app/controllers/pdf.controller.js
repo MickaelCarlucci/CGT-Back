@@ -16,19 +16,16 @@ export default {
       title = Buffer.from(title, "latin1").toString("utf8");
     }
 
-    // Normalisation et nettoyage du titre
     title = title.normalize("NFC").replace(/[^\w\s\-.]/gi, "");
 
     const pdf_url = `/uploads/${request.file.filename}`;
 
-    // Changer les permissions après l'upload
     const uploadedFilePath = path.join(
       "/var/www/uploads",
       request.file.filename
     );
     try {
       await fs.chmod(uploadedFilePath, 0o755);
-      console.log(`✅ Permissions modifiées pour : ${uploadedFilePath}`);
     } catch (error) {
       console.error(
         "❌ Erreur lors de la modification des permissions :",
@@ -82,18 +79,14 @@ export default {
         pdf.pdf_url.split("/").pop()
       );
 
-      // Supprimer le fichier
       await fs.unlink(filePath);
 
-      // Supprimer l'entrée dans la base de données
       await pdfDatamapper.deleteFile(fileId);
 
-      // Envoyer la réponse après avoir terminé toutes les actions
       return response
         .status(200)
         .json({ message: "Fichier supprimé avec succès" });
     } catch (err) {
-      // Gérer les erreurs et envoyer une réponse appropriée
       console.error(err);
       return response
         .status(500)

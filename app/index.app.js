@@ -4,36 +4,30 @@ import { fileURLToPath } from "url";
 import path from "path";
 import router from "./routers/index.router.js";
 
-const allowedOrigins = [
-  "https://cgt-tp.fr", // Domaine du site Next.js
-];
+const allowedOrigins = ["https://cgt-tp.fr"];
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ✅ Définit le chemin ABSOLU du dossier uploads
 const uploadsPath = "/var/www/uploads";
-console.log("📂 Nouveau chemin absolu des fichiers : ", uploadsPath);
 
 import fs from "fs";
 if (!fs.existsSync(uploadsPath)) {
   console.error("❌ ERREUR : Le dossier uploads n'existe pas !");
-} else {
-  console.log("✅ Le dossier uploads existe bien.");
 }
 
 app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Autoriser cette origine
+        callback(null, true);
       } else {
-        callback(new Error("Non autorisé par les règles CORS")); // Bloquer cette origine
+        callback(new Error("Non autorisé par les règles CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes HTTP autorisées
-    credentials: true, // Autoriser les cookies ou les credentials
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 

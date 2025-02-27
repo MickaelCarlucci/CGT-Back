@@ -3,23 +3,19 @@ import client from "../helpers/pg.client.js";
 
 export default {
   createPoll: async (request, response) => {
-    const { question, options } = request.body; // Récupère question et options depuis le front
+    const { question, options } = request.body;
 
-    // Vérification basique
     if (!question || !options || options.length === 0) {
       return response
         .status(400)
         .json({ error: "La question et les options sont obligatoires" });
     }
 
-    // Appel à la fonction du datamapper pour insérer les données
     const poll = await pollDatamapper.create(question, options);
     if (!poll) {
-      return response
-        .status(500)
-        .json({
-          error: "Une erreur est survenue pendant l'enregistrement du sondage",
-        });
+      return response.status(500).json({
+        error: "Une erreur est survenue pendant l'enregistrement du sondage",
+      });
     }
 
     return response.status(201).json(poll);
@@ -40,12 +36,10 @@ export default {
       const vote = await pollDatamapper.insertVote(pollId, userId);
       if (!vote) {
         await client.query("ROLLBACK");
-        return response
-          .status(500)
-          .json({
-            error:
-              "Il y a eu un problème lors de l'enregistrement du vote unique",
-          });
+        return response.status(500).json({
+          error:
+            "Il y a eu un problème lors de l'enregistrement du vote unique",
+        });
       }
 
       const voteRegistered = await pollDatamapper.updateVote(optionId);
@@ -108,18 +102,19 @@ export default {
   },
 
   pollOptions: async (request, response) => {
-    const {pollId} = request.params;
+    const { pollId } = request.params;
     const options = await pollDatamapper.findOptions(pollId);
     if (!options) {
-        return response.status(500).json({error: "Impossible de charger les options"});
+      return response
+        .status(500)
+        .json({ error: "Impossible de charger les options" });
     }
     return response.status(200).send(options);
   },
 
   deletePoll: async (request, response) => {
-    const {pollId} = request.params;
+    const { pollId } = request.params;
     const deletedPoll = await pollDatamapper.deletePoll(pollId);
     return response.status(201).json(deletedPoll);
-  }
-
+  },
 };

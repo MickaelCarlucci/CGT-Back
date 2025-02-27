@@ -5,11 +5,10 @@ export default (controllerMdw) => async (request, response, next) => {
     console.error("Error caught:", err);
     const error = new Error(err.message);
 
-    // Gestion spécifique des erreurs en fonction des statuts
     if (err.status) {
-      error.httpStatus = err.status; // Utilise le code d'erreur retourné par l'API Mailgun
+      error.httpStatus = err.status;
     } else {
-      error.httpStatus = 500; // Code par défaut
+      error.httpStatus = 500;
     }
 
     next(error);
