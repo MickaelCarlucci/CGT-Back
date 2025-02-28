@@ -17,7 +17,7 @@ if (!fs.existsSync(uploadsPath)) {
   console.error("❌ ERREUR : Le dossier uploads n'existe pas !");
 }
 
-app.use(
+/*app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) {
@@ -29,13 +29,13 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
-);
+);*/
 
-/*app.use(
+app.use(
   cors({
     origin: "*",
   })
-);*/
+);
 
 app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
